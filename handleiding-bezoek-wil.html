@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Handleiding – Bezoek Wil van der Burg</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rose:#e11d78;--violet:#7c3aed;--teal:#0d9488;--amber:#d97706;
+  --soft:#fdf6ff;--ink:#1e1030;--mid:#6b5f80;--light:#ede9fe;
+}
+body{font-family:'DM Sans',sans-serif;background:#f8f4ff;color:var(--ink);font-size:14px;line-height:1.6}
+
+/* Page */
+.page{max-width:680px;margin:0 auto;padding:2rem 1.5rem 3rem}
+
+/* Header */
+.header{text-align:center;margin-bottom:2rem;padding:2.25rem 1.5rem;background:linear-gradient(135deg,#7c3aed 0%,#e11d78 65%,#f59e0b 100%);border-radius:20px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(255,255,255,0.08) 0%,transparent 60%),radial-gradient(circle at 80% 20%,rgba(255,255,255,0.06) 0%,transparent 50%)}
+.header-inner{position:relative}
+.header-icon{font-size:2.75rem;margin-bottom:0.5rem;display:block}
+.header h1{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;margin-bottom:0.4rem;letter-spacing:-0.3px}
+.header p{font-size:13px;opacity:0.85;max-width:400px;margin:0 auto}
+
+/* Intro box */
+.intro{background:var(--light);border-radius:14px;padding:1.1rem 1.35rem;margin-bottom:1.75rem;border-left:4px solid var(--violet)}
+.intro p{font-size:13.5px;color:var(--ink);line-height:1.7}
+
+/* Steps */
+.step{display:flex;gap:14px;margin-bottom:1.35rem;align-items:flex-start}
+.step-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.15)}
+.s1{background:var(--violet)}
+.s2{background:var(--rose)}
+.s3{background:var(--teal)}
+.s4{background:var(--amber)}
+.s5{background:var(--rose)}
+.step-body{flex:1}
+.step-title{font-weight:700;font-size:15px;margin-bottom:5px}
+.step-desc{font-size:13px;color:#3d3450;line-height:1.7}
+.step-desc b{color:var(--ink)}
+
+/* UI chips */
+.chip{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px 2px 2px 0}
+.chip-v{background:var(--light);color:var(--violet)}
+.chip-r{background:#fce7f3;color:var(--rose)}
+.chip-t{background:#ccfbf1;color:#065f46}
+
+/* Mini mockup */
+.mockup{background:var(--soft);border:1px solid #e9d5ff;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:12px}
+.mockup-tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.m-tab{padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:#fff;border:1px solid #e9d5ff;color:var(--mid)}
+.m-tab.active{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;border-color:transparent}
+.mockup-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#fff;border-radius:8px;margin-bottom:4px;border:1px solid #f0e9ff}
+.mockup-row:last-child{margin-bottom:0}
+.mockup-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mockup-time{font-size:11px;font-weight:600;color:var(--mid);min-width:72px}
+.mockup-label{font-size:11px;color:var(--ink);flex:1}
+.mockup-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#d1fae5;color:#065f46}
+.mockup-badge.purple{background:var(--light);color:var(--violet)}
+.mockup-badge.grey{background:#f3f4f6;color:#6b7280}
+
+/* Tip */
+.tip{background:#fffbeb;border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:10px 14px;margin-top:10px;font-size:13px;line-height:1.65}
+.tip strong{color:#92400e}
+
+/* Divider */
+.divider{border:none;border-top:1.5px dashed #e9d5ff;margin:1.6rem 0}
+
+/* Footer */
+.footer{text-align:center;margin-top:2rem;font-size:12px;color:var(--mid);padding-top:1rem;border-top:1px solid #e9d5ff;line-height:1.8}
+
+/* Print */
+@media print{
+  body{background:#fff}
+  .page{padding:1rem}
+  .header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .step-num{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mockup,.tip,.intro{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+@media(max-width:480px){
+  .header h1{font-size:1.4rem}
+  .mockup-tabs{gap:3px}
+  .m-tab{font-size:10px;padding:3px 7px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-inner">
+      <span class="header-icon">🌸</span>
+      <h1>Bezoek Wil van der Burg</h1>
+      <p>Korte handleiding voor familie en vrienden</p>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro">
+    <p>Met deze app kun je eenvoudig een bezoek inplannen bij Wil, haar dagprogramma bekijken en een persoonlijk bericht achterlaten in het gastenboek. Alles werkt via een link in je browser — geen app downloaden nodig.</p>
+  </div>
+
+  <!-- Stap 1 -->
+  <div class="step">
+    <div class="step-num s1">1</div>
+    <div class="step-body">
+      <div class="step-title">Open de app en vul je naam in</div>
+      <div class="step-desc">
+        Ga naar de link die je hebt ontvangen. Je ziet direct een scherm met de vraag <b>"Wie ben jij?"</b>. Typ je naam in en klik op <b>Doorgaan</b>. De volgende keer wordt je naam automatisch herkend.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Stap 2 -->
+  <div class="step">
+    <div class="step-num s2">2</div>
+    <div class="step-body">
+      <div class="step-title">Bekijk wat er vandaag gepland staat</div>
+      <div class="step-desc">
+        Het eerste scherm is de <b>Vandaag</b>-tab. Je ziet een gekleurde tijdsbalk met het bezoekvenster, de activiteiten van Wil (grijs) en wie er al op bezoek komt (paars).
+      </div>
+      <div class="mockup">
+        <div class="mockup-tabs">
+          <div class="m-tab active">☀️ Vandaag</div>
+          <div class="m-tab">💌 Gastenboek</div>
+          <div class="m-tab">📅 Agenda</div>
+          <div class="m-tab">＋ Bezoek</div>
+        </div>
+        <div class="mockup-row">
+          <div class="mockup-dot" style="background:#a7f3d0"></div>
+          <div class="mockup-time">08:00 – 20:00</div>
+          <div class="mockup-label">Bezoekvenster</div>
+        </div>
+        <div class="mockup-row" style="opacity:0.65">
+          <div class="mockup-dot" style="background:#9ca3af"></div>
+          <div class="mockup-time">10:30 – 11:30</div>
+          <div class="mockup-label" style="color:#6b7280">Fysiotherapie</div>
+          <div class="mockup-badge grey">activiteit</div>
+        </div>
+        <div class="mockup-row">
+          <div class="mockup-dot" style="background:#7c3aed"></div>
+          <div class="mockup-time">14:00 – 15:30</div>
+          <div class="mockup-label">Jan de Boer</div>
+          <div class="mockup-badge purple">bezoek</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Stap 3 -->
+  <div class="step">
+    <div class="step-num s3">3</div>
+    <div class="step-body">
+      <div class="step-title">Een bezoek inplannen</div>
+      <div class="step-desc">
+        Ga naar het tabblad <span class="chip chip-t">＋ Bezoek plannen</span>. Je ziet een weekoverzicht met per dag een tijdlijn. Klik op <b>Bezoek inplannen</b> bij de dag van jouw keuze. Kies je <b>begintijd</b> — de eindtijd (1,5 uur later) wordt automatisch ingevuld. Voeg optioneel een korte notitie toe en klik op <b>Bevestigen</b>.
+      </div>
+      <div class="tip">
+        <strong>Let op:</strong> er mogen maximaal 4 bezoekers tegelijk aanwezig zijn. Als dat al het geval is, zie je een waarschuwing — je kunt dan toch boeken of een ander tijdstip kiezen.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Stap 4 -->
+  <div class="step">
+    <div class="step-num s4">4</div>
+    <div class="step-body">
+      <div class="step-title">Een bericht achterlaten in het gastenboek</div>
+      <div class="step-desc">
+        Ga naar het tabblad <span class="chip chip-r">💌 Gastenboek</span> en voer de PIN in die je hebt ontvangen. Kies vervolgens <b>Videobericht</b> of <b>Spraakbericht</b>. Je browser vraagt éénmalig toestemming voor de camera of microfoon — klik op <b>Sta toe</b>. Neem je bericht op (max. 1 minuut), klik op <b>Stop</b> en daarna <b>Terugkijken</b> om het te controleren. Voeg eventueel een korte tekst toe en klik op <b>Versturen</b>.
+      </div>
+      <div class="mockup">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="chip chip-r" style="font-size:12px;padding:5px 12px">📹 Videobericht</span>
+          <span class="chip chip-v" style="font-size:12px;padding:5px 12px">🎙️ Spraakbericht</span>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #f0e9ff;font-size:12px;color:var(--mid)">
+          ▶ Terugkijken &nbsp;&nbsp;·&nbsp;&nbsp; ✉️ Versturen &nbsp;&nbsp;·&nbsp;&nbsp; 🔄 Opnieuw
+        </div>
+      </div>
+      <div class="tip">
+        <strong>Tip:</strong> je kunt ook vanuit de <b>Vandaag</b>-tab op de naam van een bezoeker klikken om direct een snel bericht op te nemen — zonder de pagina te verlaten.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Stap 5 -->
+  <div class="step">
+    <div class="step-num s5">5</div>
+    <div class="step-body">
+      <div class="step-title">Jouw bezoek annuleren of aanpassen</div>
+      <div class="step-desc">
+        Ga naar <span class="chip chip-t">＋ Bezoek plannen</span> en navigeer naar de dag van jouw boeking. Je eigen naam staat in <b>paars</b>. Klik op <b>Mijn boeking annuleren</b> om het bezoek te verwijderen. Daarna kun je direct een nieuwe tijd kiezen.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Vragen? Neem contact op met de familie-beheerder<br>
+    App gemaakt met ❤️ voor Wil van der Burg
+  </div>
+
+</div>
+</body>
+</html>
