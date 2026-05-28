@@ -918,13 +918,13 @@ function renderSchedule(){
       }
       // Activity blocks on the bar
       let actBlocks='';
-      acts.forEach(a=>{
+      acts.forEach((a,actIdx)=>{
         const as=timeToMin(a.start_time), ae=timeToMin(a.end_time);
         if(ae<=wsMin||as>=weMin)return;
         const l=((Math.max(as,wsMin)-wsMin)/dur*100).toFixed(1);
         const w=((Math.min(ae,weMin)-Math.max(as,wsMin))/dur*100).toFixed(1);
-        const _ak=`day_${ds}_${actIdx}`; _eventData[_ak]={title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'};
-      actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup('${_ak}')"></div>`;
+        const _ak=`sch_${ds}_${actIdx}`; _eventData[_ak]={title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'};
+        actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup('${_ak}')"></div>`;
       });
       // Booking blocks on the bar
       let bookBlocks='';
