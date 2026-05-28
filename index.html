@@ -177,7 +177,10 @@ input:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(
         <h1><i class="ti ti-heart-filled"></i> <span id="app-title">Bezoek Wil van der Burg</span></h1>
         <div class="subtitle">Plan jouw bezoek eenvoudig in</div>
       </div>
-      <div id="visitor-display" class="visitor-bar"></div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <a href="handleiding-bezoek-wil.html" target="_blank" style="font-size:12px;color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:5px 12px;text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap"><i class="ti ti-book"></i> Handleiding</a>
+        <div id="visitor-display" class="visitor-bar"></div>
+      </div>
     </div>
   </div>
 
@@ -777,12 +780,13 @@ function renderDayView(){
       if(nowMin>=wsMin&&nowMin<=weMin) nowPct=((nowMin-wsMin)/dur*100);
     }
     let actBlocks='';
-    acts.forEach(a=>{
+    acts.forEach((a,actIdx)=>{
       const as=timeToMin(a.start_time),ae=timeToMin(a.end_time);
       if(ae<=wsMin||as>=weMin)return;
       const l=((Math.max(as,wsMin)-wsMin)/dur*100).toFixed(1);
       const w=((Math.min(ae,weMin)-Math.max(as,wsMin))/dur*100).toFixed(1);
-      actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup(${JSON.stringify({title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'}).replace(/'/g,'&#39;')})"></div>`;
+      const _ak=`act_${ds}_${actIdx}`; _eventData[_ak]={title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'};
+      actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup('${_ak}')"></div>`;
     });
     let bookBlocks='';
     dayBookings.forEach(b=>{
@@ -792,7 +796,8 @@ function renderDayView(){
       const w=((Math.min(be,weMin)-Math.max(bs,wsMin))/dur*100).toFixed(1);
       const isMine=b.visitor_name===currentVisitor;
       const col=isMine?'rgba(124,58,237,0.55)':'rgba(225,29,120,0.35)';
-      bookBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:${col};border-radius:3px;cursor:pointer;" title="${esc(b.visitor_name)}" onclick="showEventPopup(${JSON.stringify({title:b.visitor_name,start:b.start_time,end:b.end_time,notes:b.note||'',type:'bezoek'}).replace(/'/g,'&#39;')})"></div>`;
+      const _bk=`book_${ds}_${b.id}`; _eventData[_bk]={title:b.visitor_name,start:b.start_time,end:b.end_time,notes:b.note||'',type:'bezoek'};
+      bookBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:${col};border-radius:3px;cursor:pointer;" title="${esc(b.visitor_name)}" onclick="showEventPopup('${_bk}')"></div>`;
     });
     let labels='';
     for(let m=wsMin;m<=weMin;m+=120){
@@ -918,7 +923,8 @@ function renderSchedule(){
         if(ae<=wsMin||as>=weMin)return;
         const l=((Math.max(as,wsMin)-wsMin)/dur*100).toFixed(1);
         const w=((Math.min(ae,weMin)-Math.max(as,wsMin))/dur*100).toFixed(1);
-        actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup(${JSON.stringify({title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'}).replace(/'/g,'&#39;')})"></div>`;
+        const _ak=`day_${ds}_${actIdx}`; _eventData[_ak]={title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'};
+      actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup('${_ak}')"></div>`;
       });
       // Booking blocks on the bar
       let bookBlocks='';
@@ -1051,10 +1057,33 @@ function renderBookingTimeline(){
         <i class="ti ti-users" style="color:var(--violet)"></i> ${dayBookings.length} bezoeker(s) vandaag gepland
         ${dayBookings.length>0?'· '+[...new Set(dayBookings.map(b=>esc(b.visitor_name)))].join(', '):''}
       </div>
+      ${myBooking ? storeEditData(ds, myBooking, win, winEndMin) : ''}
       ${myBooking?`
-        <div style="background:var(--violet-light);border:1.5px solid #a78bfa;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <span style="font-size:13px;font-weight:600;color:var(--violet-text)"><i class="ti ti-star-filled" style="font-size:11px;margin-right:4px"></i>Jouw bezoek: ${fmt24(myBooking.start_time)} – ${fmt24(myBooking.end_time)}</span>
-          <button class="btn danger sm" onclick="cancelBooking('${myBooking.id}')"><i class="ti ti-x"></i> Annuleren</button>
+        <div id="booking-display-${ds}" style="background:var(--violet-light);border:1.5px solid #a78bfa;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span style="font-size:13px;font-weight:600;color:var(--violet-text)"><i class="ti ti-star-filled" style="font-size:11px;margin-right:4px"></i>Jouw bezoek: ${fmt24(myBooking.start_time)} – ${fmt24(myBooking.end_time)}${myBooking.note?' · <i style="font-weight:400">'+esc(myBooking.note)+'</i>':''}</span>
+            <div style="display:flex;gap:6px">
+              <button class="btn sm" onclick="openEditBooking('${ds}')"><i class="ti ti-edit"></i> Aanpassen</button>
+              <button class="btn danger sm" onclick="cancelBooking('${myBooking.id}')"><i class="ti ti-x"></i> Annuleren</button>
+            </div>
+          </div>
+        </div>
+        <div id="booking-edit-${ds}" style="display:none;margin-bottom:8px">
+          <div class="book-form">
+            <h4><i class="ti ti-edit"></i> Bezoek aanpassen — ${d.getDate()} ${NL_MON[d.getMonth()]}</h4>
+            <div class="form-row cols2" style="margin-bottom:10px">
+              <div><label>Begintijd</label><input type="time" id="edit-start-${ds}" min="${win.start_time}" max="${win.end_time}" oninput="autoEditEnd('${ds}')" /></div>
+              <div><label>Eindtijd</label><input type="time" id="edit-end-${ds}" min="${win.start_time}" max="${win.end_time}" /></div>
+            </div>
+            <div class="form-row" style="margin-bottom:10px">
+              <div><label>Notitie (optioneel)</label><input type="text" id="edit-note-${ds}" placeholder="bijv. Ik breng taart mee! 🎂" /></div>
+            </div>
+            <div id="edit-warn-${ds}"></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn primary" id="btn-edit-${ds}" onclick="saveEditBooking('${ds}')"><i class="ti ti-check"></i> Opslaan</button>
+              <button class="btn" onclick="closeEditBooking('${ds}')">Annuleren</button>
+            </div>
+          </div>
         </div>`
       :isPast?'':`
         <button class="btn primary sm" onclick="toggleBookForm('${bookFormId}')"><i class="ti ti-calendar-plus"></i> Bezoek inplannen</button>`}
@@ -1078,6 +1107,75 @@ function renderBookingTimeline(){
     </div>`;
   });
   c.innerHTML=html||'<div class="empty"><i class="ti ti-calendar-off"></i>Geen beschikbare dagen deze week.</div>';
+}
+
+function storeEditData(ds, booking, win, winEndMin){
+  _editData[ds]={id:booking.id,start:booking.start_time,end:booking.end_time,note:booking.note||'',winStart:win.start_time,winEnd:win.end_time,winEndMin};
+  return '';
+}
+
+function openEditBooking(ds){
+  const data=_editData[ds]; if(!data) return;
+  const display=document.getElementById(`booking-display-${ds}`);
+  const editForm=document.getElementById(`booking-edit-${ds}`);
+  if(!display||!editForm) return;
+  document.getElementById(`edit-start-${ds}`).value = data.start ? data.start.slice(0,5) : '';
+  document.getElementById(`edit-end-${ds}`).value   = data.end   ? data.end.slice(0,5)   : '';
+  document.getElementById(`edit-note-${ds}`).value  = data.note  || '';
+  document.getElementById(`edit-warn-${ds}`).innerHTML='';
+  editForm.style.display='block';
+  display.style.display='none';
+  document.getElementById(`edit-start-${ds}`).focus();
+}
+
+function closeEditBooking(ds){
+  const display=document.getElementById(`booking-display-${ds}`);
+  const editForm=document.getElementById(`booking-edit-${ds}`);
+  if(editForm) editForm.style.display='none';
+  if(display)  display.style.display='block';
+}
+
+function autoEditEnd(ds){ const winEndMin=(_editData[ds]||{}).winEndMin||1200;
+  const startEl=document.getElementById(`edit-start-${ds}`);
+  const endEl=document.getElementById(`edit-end-${ds}`);
+  if(!startEl||!endEl) return;
+  endEl.value=minToTime(Math.min(timeToMin(startEl.value)+90, winEndMin));
+}
+
+async function saveEditBooking(ds){
+  const data=_editData[ds]; if(!data) return;
+  const id=data.id, winStartStr=data.winStart, winEndStr=data.winEnd;
+  const startVal = document.getElementById(`edit-start-${ds}`).value;
+  const endVal   = document.getElementById(`edit-end-${ds}`).value;
+  const note     = document.getElementById(`edit-note-${ds}`).value.trim();
+  const warnEl   = document.getElementById(`edit-warn-${ds}`);
+  warnEl.innerHTML='';
+
+  if(!startVal||!endVal){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Vul begin- en eindtijd in.</div>';return;}
+  const startMin=timeToMin(startVal), endMin=timeToMin(endVal);
+  const wsMin=timeToMin(winStartStr), weMin=timeToMin(winEndStr);
+  if(startMin>=endMin){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Begintijd moet vóór eindtijd liggen.</div>';return;}
+  if(startMin<wsMin||endMin>weMin){warnEl.innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Tijd valt buiten het bezoekvenster (${fmt24(winStartStr)}–${fmt24(winEndStr)}).</div>`;return;}
+  if(endMin-startMin<30){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Minimale bezoekduur is 30 minuten.</div>';return;}
+
+  // Overlap check (exclude own booking)
+  const overlap=countOverlap(ds,startMin,endMin,id);
+  if(overlap>=maxOverlap){
+    warnEl.innerHTML=`<div class="msg warn"><i class="ti ti-alert-triangle"></i> Let op: er zijn al ${overlap} andere bezoekers in dit tijdvak.</div>`;
+  }
+
+  setLoading(`btn-edit-${ds}`,true);
+  const {error}=await sb.from('bookings').update({start_time:startVal, end_time:endVal, note}).eq('id',id);
+  setLoading(`btn-edit-${ds}`,false);
+  if(error){warnEl.innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Fout bij opslaan: ${error.message}</div>`;return;}
+
+  // Update local state
+  const b=bookings.find(x=>x.id===id);
+  if(b){b.start_time=startVal; b.end_time=endVal; b.note=note;}
+
+  showMsg('bezoek','<i class="ti ti-circle-check"></i> Bezoek aangepast!','success');
+  renderBookingTimeline();
+  renderStats();
 }
 
 function autoEndTime(ds, winEndMin){
@@ -1533,6 +1631,8 @@ function renderGastenboek(){
 }
 
 let gbIsPlaying=false;
+const _eventData={}; // stores popup data by key
+const _editData={};  // stores edit booking data by date
 function gbPlayAll(idx){
   if(idx>=gastenboekItems.length){ gbStopAll(); return; }
   gbIsPlaying=true;
@@ -1910,8 +2010,9 @@ document.addEventListener('keydown',e=>{
 });
 
 
-function showEventPopup(data){
-  const d = typeof data === 'string' ? JSON.parse(data) : data;
+function showEventPopup(key){
+  const d = _eventData[key];
+  if(!d) return;
   const isAct = d.type === 'activiteit';
   const badge = document.getElementById('ep-badge');
   badge.textContent = isAct ? 'Activiteit' : 'Bezoek';
