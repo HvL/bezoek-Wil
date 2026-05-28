@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bezoek Wil van der Burg</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#ffffff; --bg-secondary:#fdf6ff; --bg-tertiary:#f3eafe;
+  --text:#1e1030; --text-secondary:#6b5f80; --text-tertiary:#a898bb;
+  --border:rgba(120,60,180,0.13); --border-md:rgba(120,60,180,0.25);
+  --radius-md:10px; --radius-lg:16px;
+  --violet:#7c3aed; --violet-light:#ede9fe; --violet-text:#5b21b6;
+  --rose:#e11d78; --rose-light:#fce7f3; --rose-text:#9d174d;
+  --amber:#d97706; --amber-light:#fef3c7; --amber-text:#92400e;
+  --teal:#0d9488; --teal-light:#ccfbf1; --teal-text:#065f46;
+  --sky:#0284c7; --sky-light:#e0f2fe; --sky-text:#075985;
+  --success-bg:#d1fae5; --success-text:#065f46;
+  --error-bg:#ffe4e6; --error-text:#9f1239;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#160d24;--bg-secondary:#1f1430;--bg-tertiary:#120a1e;
+  --text:#f0eafa;--text-secondary:#b8a8d0;--text-tertiary:#7a6890;
+  --border:rgba(180,130,255,0.12);--border-md:rgba(180,130,255,0.22);
+  --violet-light:#2e1f55;--violet-text:#c4b5fd;
+  --rose-light:#3b0a20;--rose-text:#fda4af;
+  --amber-light:#2d1a00;--amber-text:#fcd34d;
+  --teal-light:#022c22;--teal-text:#6ee7b7;
+  --sky-light:#0c2030;--sky-text:#7dd3fc;
+  --success-bg:#022c16;--success-text:#6ee7b7;
+  --error-bg:#3b0011;--error-text:#fda4af;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;color:var(--text);background:var(--bg-tertiary);min-height:100vh;}
+.app-banner{background:linear-gradient(135deg,#7c3aed 0%,#e11d78 60%,#f59e0b 100%);padding:1.25rem 1rem 3.5rem;margin-bottom:-2.5rem;}
+.app-banner h1{font-size:20px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.app-banner .subtitle{font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;}
+.visitor-bar{font-size:13px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.app-wrap{max-width:720px;margin:0 auto;padding:0 1rem 3rem;}
+.app-content{position:relative;z-index:1;}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:5px;border-radius:var(--radius-lg);margin-bottom:1.25rem;box-shadow:0 2px 16px rgba(120,60,180,0.10);border:0.5px solid var(--border);}
+.tab{flex:1;padding:8px 6px;border:none;background:transparent;border-radius:10px;cursor:pointer;font-size:12px;color:var(--text-secondary);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;font-weight:500;transition:all 0.15s;}
+.tab.active{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;}
+.tab:hover:not(.active){background:var(--bg-secondary);color:var(--text);}
+.section{display:none;}.section.active{display:block;}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem;box-shadow:0 1px 8px rgba(120,60,180,0.06);}
+.card h2{font-size:15px;font-weight:600;margin-bottom:1rem;}
+.card h3{font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.4px;}
+label{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.4px;}
+input,select,textarea{width:100%;font-family:inherit;font-size:14px;padding:9px 11px;border:1.5px solid var(--border-md);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text);outline:none;transition:border-color 0.15s,box-shadow 0.15s;}
+input:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.form-row{display:grid;gap:10px;margin-bottom:14px;}
+.cols2{grid-template-columns:1fr 1fr;}.cols3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:520px){.cols2,.cols3{grid-template-columns:1fr 1fr;}}
+@media(max-width:360px){.cols2,.cols3{grid-template-columns:1fr;}}
+.btn{padding:9px 16px;border-radius:var(--radius-md);cursor:pointer;font-size:13px;font-family:inherit;border:1.5px solid var(--border-md);background:transparent;color:var(--text);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:500;transition:all 0.15s;}
+.btn:hover{background:var(--bg-secondary);}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(124,58,237,0.25);}
+.btn.primary:hover{opacity:0.9;transform:translateY(-1px);}
+.btn.danger{color:var(--error-text);border-color:var(--error-text);}
+.btn.danger:hover{background:var(--error-bg);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+.btn.sm{font-size:12px;padding:5px 10px;}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;gap:3px;}
+.badge.activity{background:var(--teal-light);color:var(--teal-text);}
+.badge.visit{background:var(--sky-light);color:var(--sky-text);}
+.badge.mine{background:var(--violet-light);color:var(--violet-text);}
+.badge.free{background:var(--success-bg);color:var(--success-text);}
+.badge.warn{background:var(--amber-light);color:var(--amber-text);}
+.badge.repeat{background:var(--rose-light);color:var(--rose-text);}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;}
+.stat-card{border-radius:var(--radius-lg);padding:14px 10px;text-align:center;}
+.stat-card.s1{background:linear-gradient(135deg,#ede9fe,#ddd6fe);}
+.stat-card.s2{background:linear-gradient(135deg,#fce7f3,#fbcfe8);}
+.stat-card.s3{background:linear-gradient(135deg,#ccfbf1,#a7f3d0);}
+.stat-num{font-size:26px;font-weight:700;}
+.stat-card.s1 .stat-num{color:var(--violet);}
+.stat-card.s2 .stat-num{color:var(--rose);}
+.stat-card.s3 .stat-num{color:var(--teal);}
+.stat-label{font-size:11px;font-weight:500;margin-top:2px;opacity:0.75;}
+.day-header{font-size:12px;font-weight:700;color:var(--violet);padding:8px 0 4px;border-bottom:1.5px solid var(--violet-light);margin-bottom:4px;margin-top:14px;text-transform:uppercase;letter-spacing:0.6px;display:flex;align-items:center;gap:6px;}
+.day-header:first-child{margin-top:0;}
+.event-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.event-item:last-child{border-bottom:none;}
+.event-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.event-dot.activity{background:var(--teal);}
+.event-dot.booking{background:var(--violet);}
+.event-dot.booking-mine{background:var(--rose);}
+.event-dot.window{background:#a7f3d0;}
+.event-time{font-size:12px;font-weight:600;color:var(--text-secondary);min-width:80px;padding-top:1px;font-variant-numeric:tabular-nums;}
+.event-info{flex:1;min-width:0;}
+.event-title{font-weight:600;font-size:14px;margin-bottom:3px;}
+.event-meta{font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.week-nav{display:flex;align-items:center;gap:8px;margin-bottom:1rem;background:var(--bg-secondary);border-radius:var(--radius-md);padding:4px;}
+.week-nav span{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--violet);}
+.week-nav .btn{padding:7px 13px;border-color:transparent;background:#1a1a1a;color:#fff;border-radius:8px;font-size:16px;line-height:1;}
+.week-nav .btn:hover{background:#333;transform:none;}
+/* Timeline */
+.timeline-wrap{position:relative;margin-bottom:1rem;}
+.timeline-day{background:var(--bg-secondary);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px;border:1px solid var(--border);}
+.timeline-day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.timeline-day-title{font-size:14px;font-weight:700;color:var(--violet);}
+.timeline-day-window{font-size:12px;color:var(--text-secondary);}
+.timeline{position:relative;height:48px;background:linear-gradient(to right,var(--teal-light),#f0fdf4);border-radius:8px;margin-bottom:10px;overflow:visible;}
+.timeline-block{position:absolute;top:0;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:default;transition:opacity 0.15s;overflow:hidden;}
+.timeline-block.mine{background:linear-gradient(135deg,var(--violet),var(--rose));}
+.timeline-block.other{background:rgba(120,60,180,0.35);}
+.timeline-block.overlap-warn{background:linear-gradient(135deg,var(--amber),#f59e0b);}
+.timeline-now{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--rose);border-radius:2px;z-index:10;}
+.timeline-now::before{content:'▼';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--rose);}
+.book-form{background:linear-gradient(135deg,var(--violet-light),var(--rose-light));border:1.5px solid #c4b5fd;border-radius:var(--radius-lg);padding:14px;margin-top:8px;}
+.book-form h4{font-size:13px;font-weight:700;color:var(--violet-text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.visitor-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.visitor-chip{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--violet-light);color:var(--violet-text);display:flex;align-items:center;gap:3px;}
+.visitor-chip.me{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;}
+.msg{padding:10px 14px;border-radius:var(--radius-md);font-size:13px;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:8px;}
+.msg.success{background:var(--success-bg);color:var(--success-text);border:1px solid #6ee7b7;}
+.msg.error{background:var(--error-bg);color:var(--error-text);border:1px solid #fca5a5;}
+.msg.warn{background:var(--amber-light);color:var(--amber-text);border:1px solid #fcd34d;}
+.admin-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;justify-content:center;}
+.admin-chip{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:500;background:var(--bg-secondary);border:1.5px solid var(--border-md);cursor:pointer;transition:all 0.15s;}
+.admin-chip:hover{border-color:var(--violet);background:var(--violet-light);}
+.admin-chip.selected{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;border-color:transparent;}
+.pin-gate{text-align:center;padding:2rem 1rem;}
+.pin-gate h2{font-size:18px;font-weight:700;margin-bottom:0.5rem;background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pin-gate p{font-size:14px;color:var(--text-secondary);margin-bottom:1rem;}
+.setup-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 16px rgba(120,60,180,0.08);}
+.setup-card h2{font-size:17px;font-weight:700;background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;}
+.known-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.known-chip{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;background:var(--violet-light);border:1px solid #c4b5fd;cursor:pointer;color:var(--violet-text);transition:all 0.12s;}
+.known-chip:hover{background:var(--violet);color:#fff;}
+.flex-row{display:flex;gap:8px;align-items:flex-end;}
+.flex-row>*{flex:1;}.flex-row>.btn{flex:0 0 auto;}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+.template-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:6px;border:1px solid var(--border);}
+.window-card{background:linear-gradient(135deg,#f0fdf4,var(--teal-light));border:1.5px solid #6ee7b7;border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.window-card i{color:var(--teal);font-size:20px;}
+.window-info{flex:1;}
+.window-info .w-title{font-weight:700;font-size:14px;color:var(--teal-text);}
+.window-info .w-sub{font-size:12px;color:var(--text-secondary);}
+#loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#7c3aed,#e11d78);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:100;}
+#loading-screen i{font-size:48px;color:#fff;animation:pulse 1.2s ease-in-out infinite;}
+#loading-screen p{font-size:15px;color:rgba(255,255,255,0.85);font-weight:500;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.spinner{width:22px;height:22px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+.spinner.dark{border-color:var(--border-md);border-top-color:var(--violet);}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:2rem;color:var(--text-tertiary);font-size:14px;line-height:1.8;}
+.empty i{font-size:32px;display:block;margin-bottom:10px;color:var(--violet-text);opacity:0.4;}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-tertiary);margin-bottom:8px;}
+.gb-entry{background:var(--bg-secondary);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px;border:1px solid var(--border);}
+.gb-entry-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.gb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;}
+.gb-meta{flex:1;}
+.gb-name{font-weight:700;font-size:14px;}
+.gb-date{font-size:11px;color:var(--text-tertiary);}
+.gb-note{font-size:13px;color:var(--text-secondary);font-style:italic;margin-top:6px;}
+.gb-type-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+.gb-type-audio{background:var(--violet-light);color:var(--violet-text);}
+.gb-type-video{background:var(--rose-light);color:var(--rose-text);}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <i class="ti ti-heart"></i>
+  <p>Laden...</p>
+  <div class="spinner"></div>
+</div>
+
+<div id="app-root" style="display:none">
+  <div class="app-banner">
+    <div style="max-width:720px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+      <div>
+        <h1><i class="ti ti-heart-filled"></i> <span id="app-title">Bezoek Wil van der Burg</span></h1>
+        <div class="subtitle">Plan jouw bezoek eenvoudig in</div>
+      </div>
+      <div id="visitor-display" class="visitor-bar"></div>
+    </div>
+  </div>
+
+  <div class="app-wrap"><div class="app-content">
+
+  <div id="visitor-setup" class="setup-card" style="display:none">
+    <h2>Wie ben jij?</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">Vul je naam in om verder te gaan.</p>
+    <div class="flex-row">
+      <input id="visitor-name-input" type="text" placeholder="Jouw naam" />
+      <button class="btn primary" onclick="setVisitor()">Doorgaan</button>
+    </div>
+    <div id="known-visitors" style="display:none;margin-top:14px">
+      <div class="section-label">Kies je naam</div>
+      <div class="known-chips" id="known-visitor-chips"></div>
+    </div>
+  </div>
+
+  <div id="main-app" style="display:none">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('bezoek')"><i class="ti ti-calendar-plus"></i> Bezoek plannen</button>
+      <button class="tab" onclick="switchTab('agenda')"><i class="ti ti-calendar-event"></i> Agenda</button>
+      <button class="tab" onclick="switchTab('vandaag')"><i class="ti ti-sun"></i> Vandaag</button>
+      <button class="tab" onclick="switchTab('gastenboek')"><i class="ti ti-message-heart"></i> Gastenboek</button>
+      <button class="tab" onclick="switchTab('secretaresse')"><i class="ti ti-briefcase"></i> Secretaresse</button>
+      <button class="tab" onclick="switchTab('beheer')"><i class="ti ti-settings-2"></i> Beheer</button>
+    </div>
+
+    <!-- VANDAAG -->
+    <div id="tab-vandaag" class="section">
+      <div class="card">
+        <div class="week-nav">
+          <button class="btn" onclick="changeDay(-1)">&#8592;</button>
+          <span id="day-label"></span>
+          <button class="btn" onclick="changeDay(1)">&#8594;</button>
+        </div>
+        <div id="day-view"></div>
+      </div>
+
+      <!-- Quick record overlay -->
+      <div id="quick-rec-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center;padding:1rem">
+        <div style="background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.3)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h3 style="font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+              <i class="ti ti-video" style="-webkit-text-fill-color:var(--rose)"></i> Bericht voor Wil
+            </h3>
+            <button class="btn sm danger" onclick="closeQuickRec()"><i class="ti ti-x"></i></button>
+          </div>
+          <p id="quick-rec-subtitle" style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem"></p>
+
+          <!-- State: choose type -->
+          <div id="qr-choose" style="display:flex;gap:10px">
+            <button class="btn primary" style="flex:1" onclick="quickStartRec('video')"><i class="ti ti-video"></i> Video</button>
+            <button class="btn primary" style="flex:1" onclick="quickStartRec('audio')"><i class="ti ti-microphone"></i> Spraak</button>
+          </div>
+
+          <!-- State: recording -->
+          <div id="qr-recording" style="display:none">
+            <video id="qr-video-prev" autoplay muted playsinline style="width:100%;max-height:180px;border-radius:10px;background:#000;display:none;margin-bottom:8px"></video>
+            <div id="qr-audio-ind" style="display:none;background:linear-gradient(135deg,var(--violet-light),var(--rose-light));border-radius:10px;padding:16px;text-align:center;margin-bottom:8px">
+              <i class="ti ti-wave-sine" style="font-size:28px;color:var(--violet)"></i>
+              <div style="font-size:12px;color:var(--violet-text);margin-top:4px;font-weight:600">Opname bezig...</div>
+            </div>
+            <div style="text-align:center;font-size:24px;font-weight:700;color:var(--rose);margin-bottom:10px;font-variant-numeric:tabular-nums" id="qr-timer">0:00</div>
+            <div style="display:flex;gap:8px;justify-content:center">
+              <button class="btn danger" onclick="quickStopRec()"><i class="ti ti-square-filled"></i> Stop</button>
+              <button class="btn" onclick="closeQuickRec()"><i class="ti ti-x"></i> Annuleren</button>
+            </div>
+          </div>
+
+          <!-- State: playback -->
+          <div id="qr-playback" style="display:none">
+            <video id="qr-pb-video" controls playsinline style="width:100%;max-height:180px;border-radius:10px;background:#000;display:none;margin-bottom:8px"></video>
+            <audio id="qr-pb-audio" controls style="width:100%;display:none;margin-bottom:8px"></audio>
+            <input type="text" id="qr-note" placeholder="Korte tekst (optioneel)" style="margin-bottom:10px" />
+            <div style="display:flex;gap:8px">
+              <button class="btn primary" id="btn-qr-send" onclick="quickSend()" style="flex:1"><i class="ti ti-send"></i> Versturen</button>
+              <button class="btn" onclick="replayQuickRec()"><i class="ti ti-player-play"></i></button>
+              <button class="btn" onclick="quickRestart()"><i class="ti ti-refresh"></i></button>
+            </div>
+          </div>
+
+          <div id="msg-quickrec" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="tab-agenda" class="section">
+      <div class="stats-row" id="stats-row"></div>
+      <div class="card">
+        <div class="week-nav">
+          <button class="btn" onclick="changeWeek(-1)">&#8592;</button>
+          <span id="week-label"></span>
+          <button class="btn" onclick="changeWeek(1)">&#8594;</button>
+        </div>
+        <div id="schedule-list"></div>
+      </div>
+    </div>
+
+    <!-- BEZOEK PLANNEN -->
+    <div id="tab-bezoek" class="section active">
+      <div class="card">
+        <h2>Bezoek inplannen</h2>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">
+          Kies een dag en stel je begin- en eindtijd in. Standaard bezoekduur is 1,5 uur. Maximaal 4 bezoekers tegelijk.
+        </p>
+        <div class="week-nav">
+          <button class="btn" onclick="changeWeekBook(-1)">&#8592;</button>
+          <span id="week-label-book"></span>
+          <button class="btn" onclick="changeWeekBook(1)">&#8594;</button>
+        </div>
+        <div id="msg-bezoek"></div>
+        <div id="booking-timeline"></div>
+      </div>
+    </div>
+
+    <!-- GASTENBOEK -->
+    <div id="tab-gastenboek" class="section">
+
+      <!-- PIN gate -->
+      <div id="gb-gate">
+        <div class="card pin-gate">
+          <h2>Gastenboek</h2>
+          <p>Het gastenboek is alleen zichtbaar voor Wil en beheerders.</p>
+          <p style="font-size:13px;margin-bottom:1.25rem;color:var(--text-secondary)">Voer de PIN in om verder te gaan.</p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
+            <input id="gb-pin-input" type="password" placeholder="PIN" style="max-width:200px;text-align:center" />
+            <button class="btn primary" onclick="checkGbPin()"><i class="ti ti-lock-open"></i> Inloggen</button>
+          </div>
+          <div id="gb-pin-error" class="msg error" style="display:none;margin-top:14px;justify-content:center"><i class="ti ti-alert-circle"></i> Verkeerde PIN.</div>
+        </div>
+      </div>
+
+      <!-- Gastenboek inhoud (verborgen tot PIN correct) -->
+      <div id="gb-content" style="display:none">
+        <div class="card">
+          <h2><i class="ti ti-message-heart" style="color:var(--rose);margin-right:6px"></i>Gastenboek voor Wil</h2>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">Laat een stem- of videobericht achter voor Wil. Max. 1 minuut.</p>
+
+          <!-- Record controls -->
+          <div id="gb-record-area">
+            <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+              <button class="btn primary" id="btn-rec-video" onclick="startRecording('video')"><i class="ti ti-video"></i> Videobericht</button>
+              <button class="btn primary" id="btn-rec-audio" onclick="startRecording('audio')"><i class="ti ti-microphone"></i> Spraakbericht</button>
+            </div>
+            <!-- Preview area -->
+            <div id="gb-preview" style="display:none;margin-bottom:1rem">
+              <video id="gb-video-preview" autoplay muted playsinline style="width:100%;max-height:220px;border-radius:var(--radius-lg);background:#000;display:none"></video>
+              <div id="gb-audio-indicator" style="display:none;background:linear-gradient(135deg,var(--violet-light),var(--rose-light));border-radius:var(--radius-lg);padding:20px;text-align:center">
+                <i class="ti ti-wave-sine" style="font-size:32px;color:var(--violet)"></i>
+                <div style="font-size:13px;color:var(--violet-text);margin-top:6px;font-weight:600">Opname bezig...</div>
+              </div>
+              <div id="gb-timer" style="text-align:center;font-size:22px;font-weight:700;color:var(--rose);margin:8px 0;font-variant-numeric:tabular-nums">0:00</div>
+              <div style="display:flex;gap:8px;justify-content:center">
+                <button class="btn danger" id="btn-stop-rec" onclick="stopRecording()"><i class="ti ti-square-filled"></i> Stop opname</button>
+                <button class="btn" id="btn-cancel-rec" onclick="cancelRecording()"><i class="ti ti-x"></i> Annuleren</button>
+              </div>
+            </div>
+            <!-- Playback + send -->
+            <div id="gb-playback" style="display:none;margin-bottom:1rem">
+              <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">Voorbeeld:</div>
+              <video id="gb-playback-video" controls style="width:100%;max-height:220px;border-radius:var(--radius-lg);background:#000;display:none"></video>
+              <audio id="gb-playback-audio" controls style="width:100%;display:none"></audio>
+              <div class="form-row" style="margin-top:10px">
+                <div><label>Korte tekst (optioneel)</label><input type="text" id="gb-note" placeholder="bijv. Fijn om je te zien, Wil!" /></div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn primary" id="btn-send-gb" onclick="sendGastenboek()"><i class="ti ti-send"></i> Versturen</button>
+                <button class="btn" onclick="replayGastenboek()"><i class="ti ti-player-play"></i> Terugkijken</button>
+                <button class="btn" onclick="resetGastenboek()"><i class="ti ti-refresh"></i> Opnieuw</button>
+              </div>
+            </div>
+            <div id="msg-gastenboek"></div>
+          </div>
+        </div>
+
+        <!-- Berichten lijst -->
+        <div class="card">
+          <h2><i class="ti ti-heart" style="color:var(--rose);margin-right:6px"></i>Berichten voor Wil</h2>
+          <div id="gb-list"><div class="empty"><i class="ti ti-loader" style="font-size:24px"></i>Laden...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEHEER -->
+    <div id="tab-beheer" class="section">
+      <div id="admin-gate">
+        <div class="card pin-gate">
+          <h2>Beheerderstoegang</h2>
+          <p>Selecteer jouw naam en voer de PIN in.</p>
+          <p style="font-size:12px;margin-bottom:1.25rem">Beheerders: <span id="admin-list-text" style="font-weight:600"></span></p>
+          <div class="admin-chips" id="admin-chips"></div>
+          <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:8px">PIN:</p>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <input id="pin-input" type="password" placeholder="PIN" style="max-width:200px;text-align:center" />
+            <button class="btn primary" onclick="checkPin()"><i class="ti ti-lock-open"></i> Inloggen</button>
+          </div>
+          <div id="pin-error" class="msg error" style="display:none;margin-top:14px;justify-content:center"><i class="ti ti-alert-circle"></i> Verkeerde PIN of naam.</div>
+        </div>
+      </div>
+
+      <div id="admin-panel" style="display:none">
+
+        <!-- Bezoekvensters -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h2 style="margin-bottom:0"><i class="ti ti-clock" style="color:var(--teal);margin-right:6px"></i>Bezoekvensters</h2>
+            <button class="btn danger sm" onclick="lockAdmin()"><i class="ti ti-lock"></i> Vergrendelen</button>
+          </div>
+          <div id="msg-beheer"></div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">
+            Stel in tussen welke tijden bezoek mogelijk is. Standaard is dit elke dag 08:00–20:00. Je kunt voor specifieke dagen een afwijkend venster instellen.
+          </p>
+
+          <div class="window-card">
+            <i class="ti ti-calendar-check"></i>
+            <div class="window-info">
+              <div class="w-title">Standaard venster: <span id="default-window-display"></span></div>
+              <div class="w-sub">Van toepassing op alle dagen zonder specifiek venster</div>
+            </div>
+            <button class="btn sm" onclick="toggleDefaultEdit()"><i class="ti ti-edit"></i> Aanpassen</button>
+          </div>
+          <div id="default-window-edit" style="display:none;background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px;margin-bottom:12px;border:1px solid var(--border)">
+            <div class="form-row cols2" style="margin-bottom:8px">
+              <div><label>Standaard begin</label><input type="time" id="def-start" /></div>
+              <div><label>Standaard einde</label><input type="time" id="def-end" /></div>
+            </div>
+            <button class="btn primary sm" onclick="saveDefaultWindow()"><i class="ti ti-check"></i> Opslaan</button>
+          </div>
+
+          <hr class="divider">
+          <h3>Afwijkend venster voor specifieke dag</h3>
+          <div class="form-row cols3">
+            <div><label>Datum</label><input type="date" id="win-date" /></div>
+            <div><label>Begin</label><input type="time" id="win-start" value="08:00" /></div>
+            <div><label>Einde</label><input type="time" id="win-end" value="20:00" /></div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn primary sm" id="btn-add-win" onclick="addWindow()"><i class="ti ti-plus"></i> Venster toevoegen</button>
+            <button class="btn danger sm" id="btn-close-win" onclick="closeWindow()"><i class="ti ti-ban"></i> Dag sluiten</button>
+          </div>
+          <div id="window-list" style="margin-top:14px"></div>
+        </div>
+
+        <!-- Vaste activiteiten -->
+        <div class="card">
+          <h2><i class="ti ti-repeat" style="color:var(--teal);margin-right:6px"></i>Vaste activiteiten mama</h2>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">Wekelijks terugkerende activiteiten. Automatisch zichtbaar op de agenda.</p>
+          <div id="weekly-activity-list"></div>
+          <hr class="divider">
+          <h3>Nieuwe vaste activiteit</h3>
+          <div class="form-row cols2">
+            <div><label>Weekdag</label>
+              <select id="wact-weekday">
+                <option value="1">Maandag</option><option value="2">Dinsdag</option>
+                <option value="3">Woensdag</option><option value="4">Donderdag</option>
+                <option value="5">Vrijdag</option><option value="6">Zaterdag</option>
+                <option value="0">Zondag</option>
+              </select>
+            </div>
+            <div><label>Activiteit</label><input type="text" id="wact-title" placeholder="bijv. Fysiotherapie" /></div>
+          </div>
+          <div class="form-row cols2">
+            <div><label>Begintijd</label><input type="time" id="wact-start" value="10:00" /></div>
+            <div><label>Eindtijd</label><input type="time" id="wact-end" value="11:00" /></div>
+          </div>
+          <div class="form-row"><div><label>Notitie</label><input type="text" id="wact-notes" placeholder="Locatie of extra info" /></div></div>
+          <button class="btn primary" id="btn-add-wact" onclick="addWeeklyActivity()"><i class="ti ti-plus"></i> Toevoegen</button>
+        </div>
+
+        <!-- Eenmalige activiteit -->
+        <div class="card">
+          <h2><i class="ti ti-calendar-event" style="color:var(--sky);margin-right:6px"></i>Eenmalige activiteit</h2>
+          <div class="form-row cols2">
+            <div><label>Datum</label><input type="date" id="act-date" /></div>
+            <div><label>Activiteit</label><input type="text" id="act-title" placeholder="bijv. Doktersbezoek" /></div>
+          </div>
+          <div class="form-row cols2">
+            <div><label>Begintijd</label><input type="time" id="act-start" value="10:00" /></div>
+            <div><label>Eindtijd</label><input type="time" id="act-end" value="11:00" /></div>
+          </div>
+          <div class="form-row"><div><label>Notitie</label><input type="text" id="act-notes" placeholder="Locatie of extra informatie" /></div></div>
+          <button class="btn primary" id="btn-add-act" onclick="addActivity()"><i class="ti ti-plus"></i> Activiteit toevoegen</button>
+        </div>
+
+        <!-- Boekingen overzicht -->
+        <div class="card">
+          <h2><i class="ti ti-list" style="color:var(--violet);margin-right:6px"></i>Alle boekingen</h2>
+          <div id="admin-booking-list"></div>
+        </div>
+
+        <!-- Instellingen -->
+        <div class="card">
+          <h2><i class="ti ti-adjustments" style="color:var(--amber);margin-right:6px"></i>Instellingen</h2>
+          <div class="form-row">
+            <div><label>App naam</label>
+              <div class="flex-row" style="margin-top:4px">
+                <input type="text" id="app-name-input" placeholder="Bezoek Wil van der Burg" />
+                <button class="btn" onclick="saveAppName()"><i class="ti ti-check"></i> Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div><label>PIN voor Wil (gastenboek)</label>
+              <div class="flex-row" style="margin-top:4px">
+                <input type="password" id="new-wil-pin" placeholder="Minimaal 4 tekens" />
+                <button class="btn" onclick="changeWilPin()"><i class="ti ti-check"></i> Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div><label>PIN voor secretaresse</label>
+              <div class="flex-row" style="margin-top:4px">
+                <input type="password" id="new-sec-pin" placeholder="Minimaal 4 tekens" />
+                <button class="btn" onclick="changeSecPin()"><i class="ti ti-check"></i> Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div><label>Nieuwe beheerder PIN</label>
+              <div class="flex-row" style="margin-top:4px">
+                <input type="password" id="new-pin" placeholder="Minimaal 4 tekens" />
+                <button class="btn" onclick="changePin()"><i class="ti ti-check"></i> Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:8px">
+            <div><label>Beheerdernamen (één per regel, max. 5)</label>
+              <textarea id="admin-names-input" rows="6" style="margin-top:4px"></textarea>
+              <button class="btn" style="margin-top:8px" onclick="saveAdminNames()"><i class="ti ti-device-floppy"></i> Namen opslaan</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECRETARESSE -->
+    <div id="tab-secretaresse" class="section">
+      <!-- PIN gate -->
+      <div id="sec-gate">
+        <div class="card pin-gate">
+          <h2>Secretaresse</h2>
+          <p>Voer de secretaresse-PIN in om verder te gaan.</p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
+            <input id="sec-pin-input" type="password" placeholder="PIN" style="max-width:200px;text-align:center" />
+            <button class="btn primary" onclick="checkSecPin()"><i class="ti ti-lock-open"></i> Inloggen</button>
+          </div>
+          <div id="sec-pin-error" class="msg error" style="display:none;margin-top:14px;justify-content:center"><i class="ti ti-alert-circle"></i> Verkeerde PIN.</div>
+        </div>
+      </div>
+
+      <!-- Secretaresse inhoud -->
+      <div id="sec-content" style="display:none">
+
+        <!-- Afspraak maken voor iemand anders -->
+        <div class="card">
+          <h2><i class="ti ti-calendar-plus" style="color:var(--teal);margin-right:6px"></i>Afspraak maken voor iemand anders</h2>
+          <div id="msg-sec"></div>
+          <div class="week-nav">
+            <button class="btn" onclick="changeWeekSec(-1)">&#8592;</button>
+            <span id="week-label-sec"></span>
+            <button class="btn" onclick="changeWeekSec(1)">&#8594;</button>
+          </div>
+          <div id="sec-booking-slots"></div>
+        </div>
+
+        <!-- Afspraken verwijderen -->
+        <div class="card">
+          <h2><i class="ti ti-trash" style="color:var(--rose);margin-right:6px"></i>Afspraak verwijderen</h2>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">Klik op een afspraak om die te verwijderen.</p>
+          <div class="week-nav">
+            <button class="btn" onclick="changeWeekSecDel(-1)">&#8592;</button>
+            <span id="week-label-sec-del"></span>
+            <button class="btn" onclick="changeWeekSecDel(1)">&#8594;</button>
+          </div>
+          <div id="sec-delete-list"></div>
+        </div>
+
+        <!-- Gastenboek URL -->
+        <div class="card">
+          <h2><i class="ti ti-link" style="color:var(--violet);margin-right:6px"></i>Gedeelde gastenboek-link</h2>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">
+            Deel deze link zodat mensen een videobericht kunnen achterlaten en het gastenboek kunnen bekijken. Ze moeten eerst een video versturen voor ze de berichten kunnen zien.
+          </p>
+          <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px;font-size:13px;font-family:monospace;word-break:break-all;margin-bottom:12px" id="gb-link-display">
+            Laden...
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn primary" onclick="copyGbLink()"><i class="ti ti-copy"></i> Kopieer link</button>
+            <button class="btn" onclick="openGbLink()"><i class="ti ti-external-link"></i> Openen</button>
+          </div>
+          <div id="msg-sec-link" style="margin-top:10px"></div>
+          <hr class="divider">
+          <h3>PIN voor gastenboek-link</h3>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Bezoekers van de link hebben deze PIN nodig.</p>
+          <div class="flex-row">
+            <input type="password" id="new-gb-link-pin" placeholder="Nieuwe PIN (min. 4 tekens)" />
+            <button class="btn" onclick="changeGbLinkPin()"><i class="ti ti-check"></i> Opslaan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  </div></div>
+
+  <!-- Event popup overlay -->
+  <div id="event-popup-overlay" onclick="closeEventPopup()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;align-items:center;justify-content:center;padding:1rem">
+    <div id="event-popup" onclick="event.stopPropagation()" style="background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;max-width:360px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.25)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+        <div>
+          <div id="ep-badge" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px"></div>
+          <div id="ep-title" style="font-size:18px;font-weight:700"></div>
+        </div>
+        <button onclick="closeEventPopup()" style="background:none;border:none;cursor:pointer;color:var(--text-tertiary);font-size:20px;line-height:1;padding:0 0 0 8px">×</button>
+      </div>
+      <div id="ep-time" style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;display:flex;align-items:center;gap:6px"></div>
+      <div id="ep-notes" style="font-size:13px;color:var(--text-secondary);font-style:italic"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL='https://ozqocybvmehmqiyfhejv.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96cW9jeWJ2bWVobXFpeWZoZWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDE1NzMsImV4cCI6MjA5NTQ3NzU3M30.mK8HS29ldrZkNT8oOWEXulVAc4mdVsG0j_xWK3J1PNs';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const NL_DAYS=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+const NL_DAYS_SHORT=['zo','ma','di','wo','do','vr','za'];
+const NL_MON=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmtDate=d=>d.toISOString().split('T')[0];
+const fmt24=t=>{if(!t)return'';const m=t.match(/^(\d{1,2}):(\d{2})/);return m?m[1].padStart(2,'0')+':'+m[2]:t;};
+const timeToMin=t=>{const m=t.match(/^(\d{1,2}):(\d{2})/);return m?parseInt(m[1])*60+parseInt(m[2]):0;};
+const minToTime=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+
+function getWeekDates(offset){
+  const now=new Date(),day=now.getDay(),mon=new Date(now);
+  mon.setDate(now.getDate()-(day===0?6:day-1)+offset*7);
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
+}
+const fmtWeekLabel=days=>days[0].getDate()+' '+NL_MON[days[0].getMonth()]+' – '+days[6].getDate()+' '+NL_MON[days[6].getMonth()]+' '+days[6].getFullYear();
+
+// ── State ──
+let activities=[],bookings=[],visitors=[],adminNames=[],weeklyActivities=[],visitWindows=[],gastenboekItems=[];
+let pin='1234',wilPin='0000',secPin='1234',gbLinkPin='1234',appName='Bezoek Wil van der Burg',defaultWinStart='08:00',defaultWinEnd='20:00',maxOverlap=4;
+let currentVisitor=localStorage.getItem('wil_visitor')||'';
+let isAdmin=false,isSec=false,isGbUnlocked=false,weekOffset=0,weekOffsetBook=0,weekOffsetSec=0,weekOffsetSecDel=0,dayOffset=0;
+
+async function loadAll(){
+  const [aR,bR,vR,stR,waR,wR,gbR]=await Promise.all([
+    sb.from('activities').select('*'),
+    sb.from('bookings').select('*'),
+    sb.from('visitors').select('*'),
+    sb.from('settings').select('*'),
+    sb.from('weekly_activities').select('*'),
+    sb.from('visit_windows').select('*'),
+    sb.from('gastenboek').select('*').order('created_at',{ascending:false}),
+  ]);
+  activities=aR.data||[];
+  bookings=bR.data||[];
+  visitors=(vR.data||[]).map(r=>r.name);
+  weeklyActivities=waR.data||[];
+  visitWindows=wR.data||[];
+  gastenboekItems=gbR.data||[];
+  const sm=Object.fromEntries((stR.data||[]).map(r=>[r.key,r.value]));
+  pin=sm.pin||'1234';
+  wilPin=sm.wil_pin||'0000';
+  secPin=sm.secretaresse_pin||'1234';
+  gbLinkPin=sm.gastenboek_link_pin||'1234';
+  appName=sm.app_name||'Bezoek Wil van der Burg';
+  defaultWinStart=sm.default_window_start||'08:00';
+  defaultWinEnd=sm.default_window_end||'20:00';
+  maxOverlap=parseInt(sm.max_overlap||'4');
+  adminNames=(sm.admin_names||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
+
+async function upsertSetting(key,value){await sb.from('settings').upsert({key,value});}
+
+async function boot(){
+  try{await loadAll();}catch(e){console.error(e);}
+  document.getElementById('app-title').textContent=appName;
+  document.title=appName;
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('app-root').style.display='block';
+  if(currentVisitor&&visitors.includes(currentVisitor))showMainApp();
+  else{document.getElementById('visitor-setup').style.display='block';renderKnownVisitors();}
+}
+
+// ── Visitor ──
+async function setVisitor(){
+  const name=document.getElementById('visitor-name-input').value.trim();
+  if(!name)return;
+  currentVisitor=name;
+  localStorage.setItem('wil_visitor',name);
+  if(!visitors.includes(name)){visitors.push(name);await sb.from('visitors').upsert({name});}
+  showMainApp();
+}
+function showMainApp(){
+  document.getElementById('visitor-setup').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('visitor-display').innerHTML=
+    `<i class="ti ti-user-circle" style="font-size:16px"></i> ${esc(currentVisitor)}
+     <button class="btn sm" style="border-color:rgba(255,255,255,0.4);color:#fff;background:rgba(255,255,255,0.15)" onclick="switchVisitor()">Wisselen</button>`;
+  renderAdminChips();renderBookingTimeline();
+}
+function switchVisitor(){
+  document.getElementById('visitor-setup').style.display='block';
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('visitor-name-input').value='';
+  renderKnownVisitors();
+}
+function renderKnownVisitors(){
+  if(!visitors.length)return;
+  document.getElementById('known-visitors').style.display='block';
+  document.getElementById('known-visitor-chips').innerHTML=visitors.map(n=>`<div class="known-chip" onclick="quickSelect('${esc(n)}')">${esc(n)}</div>`).join('');
+}
+function quickSelect(name){document.getElementById('visitor-name-input').value=name;setVisitor();}
+
+// ── Tabs ──
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['bezoek','agenda','vandaag','gastenboek','secretaresse','beheer'][i]===tab));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='vandaag')renderDayView();
+  if(tab==='agenda')renderSchedule();
+  if(tab==='bezoek')renderBookingTimeline();
+  if(tab==='gastenboek'){
+    if(isGbUnlocked){
+      document.getElementById('gb-gate').style.display='none';
+      document.getElementById('gb-content').style.display='block';
+      renderGastenboek();
+    } else {
+      document.getElementById('gb-gate').style.display='block';
+      document.getElementById('gb-content').style.display='none';
+      document.getElementById('gb-pin-input').value='';
+      document.getElementById('gb-pin-error').style.display='none';
+      resetGastenboek();
+    }
+  }
+  if(tab==='secretaresse'){
+    document.getElementById('sec-gate').style.display='block';
+    document.getElementById('sec-content').style.display='none';
+    document.getElementById('sec-pin-input').value='';
+    document.getElementById('sec-pin-error').style.display='none';
+  }
+  if(tab==='beheer'){renderAdminBookings();renderWeeklyActivities();renderWindowList();}
+}
+
+function checkGbPin(){
+  const entered=document.getElementById('gb-pin-input').value;
+  // Allow access with Wil's PIN or the admin PIN (+ admin name selected)
+  const adminName=document.querySelector('#admin-chips .admin-chip.selected')?.dataset.name;
+  const validAdmin=adminName&&adminNames.includes(adminName)&&entered===pin;
+  const validWil=entered===wilPin;
+  if(validWil||validAdmin){
+    isGbUnlocked=true;
+    document.getElementById('gb-gate').style.display='none';
+    document.getElementById('gb-content').style.display='block';
+    renderGastenboek();
+  } else {
+    document.getElementById('gb-pin-error').style.display='flex';
+  }
+}
+
+function changeDay(dir){dayOffset+=dir;renderDayView();}
+
+function renderDayView(){
+  const d=new Date();
+  d.setDate(d.getDate()+dayOffset);
+  const ds=fmtDate(d);
+  const dayName=cap(NL_DAYS[d.getDay()])+' '+d.getDate()+' '+NL_MON[d.getMonth()]+' '+d.getFullYear();
+  const isToday=dayOffset===0;
+
+  document.getElementById('day-label').innerHTML=
+    `${isToday?'<span style="color:var(--rose);margin-right:6px">●</span>':''}${dayName}`;
+
+  const win=getWindowForDate(ds);
+  const isClosed=win.start_time===win.end_time||(win.start_time==='00:00'&&win.end_time==='00:00');
+  const acts=[...activities.filter(a=>a.date===ds),...getWeeklyActsForDate(ds)]
+    .sort((a,b)=>a.start_time.localeCompare(b.start_time));
+  const dayBookings=bookings.filter(b=>b.date===ds)
+    .sort((a,b)=>a.start_time.localeCompare(b.start_time));
+
+  let html='';
+
+  // ── Tijdsbalk ──
+  if(!isClosed){
+    const wsMin=timeToMin(win.start_time),weMin=timeToMin(win.end_time),dur=weMin-wsMin;
+    let nowPct=-1;
+    if(isToday){
+      const now=new Date(),nowMin=now.getHours()*60+now.getMinutes();
+      if(nowMin>=wsMin&&nowMin<=weMin) nowPct=((nowMin-wsMin)/dur*100);
+    }
+    let actBlocks='';
+    acts.forEach(a=>{
+      const as=timeToMin(a.start_time),ae=timeToMin(a.end_time);
+      if(ae<=wsMin||as>=weMin)return;
+      const l=((Math.max(as,wsMin)-wsMin)/dur*100).toFixed(1);
+      const w=((Math.min(ae,weMin)-Math.max(as,wsMin))/dur*100).toFixed(1);
+      actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup(${JSON.stringify({title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'}).replace(/'/g,'&#39;')})"></div>`;
+    });
+    let bookBlocks='';
+    dayBookings.forEach(b=>{
+      const bs=timeToMin(b.start_time),be=timeToMin(b.end_time);
+      if(be<=wsMin||bs>=weMin)return;
+      const l=((Math.max(bs,wsMin)-wsMin)/dur*100).toFixed(1);
+      const w=((Math.min(be,weMin)-Math.max(bs,wsMin))/dur*100).toFixed(1);
+      const isMine=b.visitor_name===currentVisitor;
+      const col=isMine?'rgba(124,58,237,0.55)':'rgba(225,29,120,0.35)';
+      bookBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:${col};border-radius:3px;cursor:pointer;" title="${esc(b.visitor_name)}" onclick="showEventPopup(${JSON.stringify({title:b.visitor_name,start:b.start_time,end:b.end_time,notes:b.note||'',type:'bezoek'}).replace(/'/g,'&#39;')})"></div>`;
+    });
+    let labels='';
+    for(let m=wsMin;m<=weMin;m+=120){
+      const pct=((m-wsMin)/dur*100).toFixed(1);
+      labels+=`<span style="position:absolute;left:${pct}%;bottom:-16px;font-size:10px;color:var(--text-tertiary);transform:translateX(-50%)">${minToTime(m)}</span>`;
+    }
+    const nowLine=nowPct>=0?`<div style="position:absolute;top:-3px;bottom:-3px;left:${nowPct.toFixed(1)}%;width:2px;background:var(--rose);border-radius:2px;z-index:5;"></div>`:'';
+    html+=`<div style="margin:0 0 28px">
+      <div style="position:relative;height:36px;background:linear-gradient(to right,#e0f7f4,#d1fae5);border-radius:8px;overflow:visible;border:1px solid #a7f3d0">
+        ${actBlocks}${bookBlocks}${nowLine}
+        <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--teal-text)">${fmt24(win.start_time)}</span>
+        <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--teal-text)">${fmt24(win.end_time)}</span>
+      </div>
+      <div style="position:relative;height:18px">${labels}</div>
+    </div>`;
+  } else {
+    html+=`<div style="text-align:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:16px;font-size:14px;color:var(--text-tertiary)"><i class="ti ti-ban"></i> Gesloten</div>`;
+  }
+
+  // ── Activiteiten (grijs) ──
+  if(acts.length){
+    html+=`<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-bottom:8px">Activiteiten</div>`;
+    acts.forEach(a=>{
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:6px;opacity:0.75">
+        <div style="width:10px;height:10px;border-radius:50%;background:#9ca3af;flex-shrink:0"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);min-width:90px;font-variant-numeric:tabular-nums">${fmt24(a.start_time)} – ${fmt24(a.end_time)}</div>
+        <div style="font-size:14px;color:#6b7280">${esc(a.title)}${a.notes?` <span style="font-size:12px;color:#9ca3af">· ${esc(a.notes)}</span>`:''}</div>
+      </div>`;
+    });
+    html+=`<div style="margin-bottom:16px"></div>`;
+  }
+
+  // ── Bezoekers ──
+  if(dayBookings.length){
+    html+=`<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-bottom:8px">Bezoekers (${dayBookings.length})</div>`;
+    dayBookings.forEach(b=>{
+      const isMine=b.visitor_name===currentVisitor;
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:${isMine?'var(--violet-light)':'var(--bg-secondary)'};border-radius:var(--radius-md);margin-bottom:6px;border:1px solid ${isMine?'#a78bfa':'var(--border)'}">
+        <div style="width:10px;height:10px;border-radius:50%;background:${isMine?'var(--violet)':'var(--rose)'};flex-shrink:0"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);min-width:90px;font-variant-numeric:tabular-nums">${fmt24(b.start_time)} – ${fmt24(b.end_time)}</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <span style="font-size:15px;font-weight:600;color:${isMine?'var(--violet-text)':'var(--text)'}">${esc(b.visitor_name)}${b.note?` <span style="font-size:12px;color:var(--text-secondary);font-style:italic;font-weight:400">· ${esc(b.note)}</span>`:''}</span>
+          <button onclick="openQuickRec('${esc(b.visitor_name)}')" style="font-size:11px;background:var(--rose-light);color:var(--rose-text);padding:4px 10px;border-radius:10px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px"><i class="ti ti-video" style="font-size:11px"></i> bericht</button>
+        </div>
+      </div>`;
+    });
+  } else if(!isClosed){
+    html+=`<div class="empty" style="padding:1.5rem"><i class="ti ti-users" style="font-size:28px"></i>Nog geen bezoekers vandaag</div>`;
+  }
+
+  document.getElementById('day-view').innerHTML=html;
+}
+
+// ── Window helpers ──
+function getWindowForDate(ds){
+  const specific=visitWindows.find(w=>w.date===ds);
+  if(specific)return specific;
+  return{start_time:defaultWinStart,end_time:defaultWinEnd};
+}
+
+// ── Overlap check ──
+// Returns number of bookings overlapping with [start,end] on date, excluding optional bookingId
+function countOverlap(ds,startMin,endMin,excludeId=null){
+  return bookings.filter(b=>{
+    if(b.date!==ds)return false;
+    if(b.id===excludeId)return false;
+    const bs=timeToMin(b.start_time),be=timeToMin(b.end_time);
+    return startMin<be&&endMin>bs;
+  }).length;
+}
+
+// ── Stats ──
+function renderStats(){
+  const today=fmtDate(new Date());
+  const myUpcoming=bookings.filter(b=>b.visitor_name===currentVisitor&&b.date>=today).length;
+  const totalToday=bookings.filter(b=>b.date===today).length;
+  const acts=activities.filter(a=>a.date>=today).length+weeklyActivities.length;
+  document.getElementById('stats-row').innerHTML=
+    `<div class="stat-card s1"><div class="stat-num">${myUpcoming}</div><div class="stat-label">Mijn bezoeken</div></div>
+     <div class="stat-card s2"><div class="stat-num">${totalToday}</div><div class="stat-label">Bezoeken vandaag</div></div>
+     <div class="stat-card s3"><div class="stat-num">${acts}</div><div class="stat-label">Activiteiten</div></div>`;
+}
+
+// ── Agenda ──
+function getWeeklyActsForDate(ds){
+  const d=new Date(ds+'T12:00:00'),dow=d.getDay();
+  return weeklyActivities.filter(wa=>parseInt(wa.weekday)===dow).map(wa=>({...wa,date:ds,_weekly:true}));
+}
+
+function renderSchedule(){
+  renderStats();
+  const days=getWeekDates(weekOffset);
+  document.getElementById('week-label').textContent=fmtWeekLabel(days);
+  const c=document.getElementById('schedule-list');
+  let html='',has=false;
+
+  days.forEach(d=>{
+    const ds=fmtDate(d);
+    const win=getWindowForDate(ds);
+    const isClosed=win.start_time===win.end_time||(win.start_time==='00:00'&&win.end_time==='00:00');
+    const acts=[...activities.filter(a=>a.date===ds),...getWeeklyActsForDate(ds)]
+      .sort((a,b)=>a.start_time.localeCompare(b.start_time));
+    const dayBookings=bookings.filter(b=>b.date===ds).sort((a,b)=>a.start_time.localeCompare(b.start_time));
+    if(!acts.length&&!dayBookings.length&&isClosed)return;
+    has=true;
+
+    html+=`<div class="day-header"><i class="ti ti-calendar-week"></i>${cap(NL_DAYS[d.getDay()])} ${d.getDate()} ${NL_MON[d.getMonth()]}</div>`;
+
+    // ── 1. Horizontale tijdsbalk voor bezoekvenster ──
+    if(!isClosed){
+      const wsMin=timeToMin(win.start_time), weMin=timeToMin(win.end_time), dur=weMin-wsMin;
+      // Now-indicator
+      const today=fmtDate(new Date());
+      let nowPct=-1;
+      if(ds===today){
+        const now=new Date(), nowMin=now.getHours()*60+now.getMinutes();
+        if(nowMin>=wsMin&&nowMin<=weMin) nowPct=((nowMin-wsMin)/dur*100);
+      }
+      // Activity blocks on the bar
+      let actBlocks='';
+      acts.forEach(a=>{
+        const as=timeToMin(a.start_time), ae=timeToMin(a.end_time);
+        if(ae<=wsMin||as>=weMin)return;
+        const l=((Math.max(as,wsMin)-wsMin)/dur*100).toFixed(1);
+        const w=((Math.min(ae,weMin)-Math.max(as,wsMin))/dur*100).toFixed(1);
+        actBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:rgba(100,100,100,0.25);border-radius:3px;cursor:pointer;" title="${esc(a.title)}" onclick="showEventPopup(${JSON.stringify({title:a.title,start:a.start_time,end:a.end_time,notes:a.notes||'',type:'activiteit'}).replace(/'/g,'&#39;')})"></div>`;
+      });
+      // Booking blocks on the bar
+      let bookBlocks='';
+      dayBookings.forEach(b=>{
+        const bs=timeToMin(b.start_time), be=timeToMin(b.end_time);
+        if(be<=wsMin||bs>=weMin)return;
+        const l=((Math.max(bs,wsMin)-wsMin)/dur*100).toFixed(1);
+        const w=((Math.min(be,weMin)-Math.max(bs,wsMin))/dur*100).toFixed(1);
+        const isMine=b.visitor_name===currentVisitor;
+        const col=isMine?'rgba(124,58,237,0.55)':'rgba(225,29,120,0.35)';
+        bookBlocks+=`<div style="position:absolute;top:0;height:100%;left:${l}%;width:${w}%;background:${col};border-radius:3px;" title="${esc(b.visitor_name)}"></div>`;
+      });
+      // Time labels: every 2 hours
+      let labels='';
+      for(let m=wsMin;m<=weMin;m+=120){
+        const pct=((m-wsMin)/dur*100).toFixed(1);
+        labels+=`<span style="position:absolute;left:${pct}%;bottom:-16px;font-size:10px;color:var(--text-tertiary);transform:translateX(-50%)">${minToTime(m)}</span>`;
+      }
+      const nowLine=nowPct>=0?`<div style="position:absolute;top:-3px;bottom:-3px;left:${nowPct.toFixed(1)}%;width:2px;background:var(--rose);border-radius:2px;z-index:5;"></div>`:'';
+
+      html+=`<div style="margin:8px 0 28px">
+        <div style="position:relative;height:28px;background:linear-gradient(to right,#e0f7f4,#d1fae5);border-radius:6px;overflow:visible;border:1px solid #a7f3d0">
+          ${actBlocks}${bookBlocks}${nowLine}
+          <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--teal-text);letter-spacing:0.3px">${fmt24(win.start_time)}</span>
+          <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--teal-text)">${fmt24(win.end_time)}</span>
+        </div>
+        <div style="position:relative;height:16px">${labels}</div>
+      </div>`;
+    }
+
+    // ── 2. Activiteiten (grijs) ──
+    if(acts.length){
+      acts.forEach(a=>{
+        html+=`<div class="event-item" style="opacity:0.7">
+          <div class="event-dot" style="background:#9ca3af;margin-top:4px;flex-shrink:0"></div>
+          <div class="event-time" style="color:#9ca3af">${fmt24(a.start_time)} – ${fmt24(a.end_time)}</div>
+          <div class="event-info">
+            <div class="event-title" style="color:#6b7280;font-weight:500">${esc(a.title)}</div>
+            <div class="event-meta">
+              ${a.notes?`<span style="color:#9ca3af"><i class="ti ti-map-pin" style="font-size:10px"></i> ${esc(a.notes)}</span>`:''}
+            </div>
+          </div>
+        </div>`;
+      });
+    }
+
+    // ── 3. Bezoekers ──
+    if(dayBookings.length){
+      dayBookings.forEach(b=>{
+        const isMine=b.visitor_name===currentVisitor;
+        html+=`<div class="event-item">
+          <div class="event-dot ${isMine?'booking-mine':'booking'}"></div>
+          <div class="event-time">${fmt24(b.start_time)} – ${fmt24(b.end_time)}</div>
+          <div class="event-info">
+            <div class="event-title">${esc(b.visitor_name)}${b.note?` <span style="font-size:12px;color:var(--text-secondary);font-style:italic;font-weight:400">· ${esc(b.note)}</span>`:''}</div>
+          </div>
+        </div>`;
+      });
+    }
+  });
+
+  c.innerHTML=has?html:'<div class="empty"><i class="ti ti-calendar-off"></i>Niets gepland deze week</div>';
+}
+function changeWeek(d){weekOffset+=d;renderSchedule();}
+function changeWeekBook(d){weekOffsetBook+=d;renderBookingTimeline();}
+
+// ── Booking timeline ──
+function renderBookingTimeline(){
+  const days=getWeekDates(weekOffsetBook);
+  document.getElementById('week-label-book').textContent=fmtWeekLabel(days);
+  const c=document.getElementById('booking-timeline');
+  let html='';
+  const today=fmtDate(new Date());
+  days.forEach(d=>{
+    const ds=fmtDate(d);
+    const win=getWindowForDate(ds);
+    const isClosed=win.start_time===win.end_time||(win.start_time==='00:00'&&win.end_time==='00:00');
+    if(isClosed){
+      html+=`<div class="timeline-day" style="opacity:0.5">
+        <div class="timeline-day-header">
+          <span class="timeline-day-title">${cap(NL_DAYS[d.getDay()])} ${d.getDate()} ${NL_MON[d.getMonth()]}</span>
+          <span class="timeline-day-window"><i class="ti ti-ban"></i> Gesloten</span>
+        </div></div>`;
+      return;
+    }
+    const winStartMin=timeToMin(win.start_time),winEndMin=timeToMin(win.end_time),winDur=winEndMin-winStartMin;
+    const dayBookings=bookings.filter(b=>b.date===ds);
+    const myBooking=dayBookings.find(b=>b.visitor_name===currentVisitor);
+    const isPast=ds<today;
+
+    // Build timeline blocks
+    let timelineBlocks='';
+    dayBookings.forEach(b=>{
+      const bs=timeToMin(b.start_time),be=timeToMin(b.end_time);
+      const left=((bs-winStartMin)/winDur*100).toFixed(1);
+      const width=((be-bs)/winDur*100).toFixed(1);
+      const isMine=b.visitor_name===currentVisitor;
+      const overlap=countOverlap(ds,bs,be,b.id);
+      const cls=isMine?'mine':overlap>=maxOverlap-1?'overlap-warn':'other';
+      timelineBlocks+=`<div class="timeline-block ${cls}" style="left:${left}%;width:${width}%" title="${esc(b.visitor_name)}: ${fmt24(b.start_time)}–${fmt24(b.end_time)}">${isMine?'Jij':esc(b.visitor_name.split(' ')[0])}</div>`;
+    });
+
+    // Now indicator
+    let nowLine='';
+    if(ds===today){
+      const now=new Date(),nowMin=now.getHours()*60+now.getMinutes();
+      if(nowMin>=winStartMin&&nowMin<=winEndMin){
+        const pos=((nowMin-winStartMin)/winDur*100).toFixed(1);
+        nowLine=`<div class="timeline-now" style="left:${pos}%"></div>`;
+      }
+    }
+
+    // Time labels
+    const labels=[];
+    for(let m=winStartMin;m<=winEndMin;m+=120){labels.push(`<span style="position:absolute;left:${((m-winStartMin)/winDur*100).toFixed(0)}%;font-size:10px;color:var(--text-tertiary);top:52px;transform:translateX(-50%)">${minToTime(m)}</span>`);}
+
+    const bookFormId=`book-form-${ds}`;
+    const defaultEnd=minToTime(Math.min(winStartMin+90,winEndMin));
+
+    html+=`<div class="timeline-day">
+      <div class="timeline-day-header">
+        <span class="timeline-day-title">${cap(NL_DAYS[d.getDay()])} ${d.getDate()} ${NL_MON[d.getMonth()]}</span>
+        <span class="timeline-day-window"><i class="ti ti-clock" style="color:var(--teal)"></i> ${fmt24(win.start_time)}–${fmt24(win.end_time)}</span>
+      </div>
+      <div style="position:relative;margin-bottom:28px">
+        <div class="timeline">${timelineBlocks}${nowLine}</div>
+        ${labels.join('')}
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">
+        <i class="ti ti-users" style="color:var(--violet)"></i> ${dayBookings.length} bezoeker(s) vandaag gepland
+        ${dayBookings.length>0?'· '+[...new Set(dayBookings.map(b=>esc(b.visitor_name)))].join(', '):''}
+      </div>
+      ${myBooking?`
+        <div style="background:var(--violet-light);border:1.5px solid #a78bfa;border-radius:var(--radius-md);padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--violet-text)"><i class="ti ti-star-filled" style="font-size:11px;margin-right:4px"></i>Jouw bezoek: ${fmt24(myBooking.start_time)} – ${fmt24(myBooking.end_time)}</span>
+          <button class="btn danger sm" onclick="cancelBooking('${myBooking.id}')"><i class="ti ti-x"></i> Annuleren</button>
+        </div>`
+      :isPast?'':`
+        <button class="btn primary sm" onclick="toggleBookForm('${bookFormId}')"><i class="ti ti-calendar-plus"></i> Bezoek inplannen</button>`}
+      <div id="${bookFormId}" style="display:none;margin-top:10px">
+        <div class="book-form">
+          <h4><i class="ti ti-calendar-plus"></i> Bezoek op ${d.getDate()} ${NL_MON[d.getMonth()]}</h4>
+          <div class="form-row cols2" style="margin-bottom:10px">
+            <div><label>Begintijd</label><input type="time" id="book-start-${ds}" value="${minToTime(winStartMin)}" min="${win.start_time}" max="${win.end_time}" oninput="autoEndTime('${ds}',${winEndMin})" /></div>
+            <div><label>Eindtijd</label><input type="time" id="book-end-${ds}" value="${defaultEnd}" min="${win.start_time}" max="${win.end_time}" /></div>
+          </div>
+          <div class="form-row" style="margin-bottom:10px">
+            <div><label>Notitie (optioneel)</label><input type="text" id="book-note-${ds}" placeholder="bijv. Ik breng taart mee! 🎂" /></div>
+          </div>
+          <div id="book-warn-${ds}"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn primary" id="btn-book-${ds}" onclick="confirmBooking('${ds}','${win.start_time}','${win.end_time}')"><i class="ti ti-check"></i> Bevestigen</button>
+            <button class="btn" onclick="toggleBookForm('${bookFormId}')">Annuleren</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+  c.innerHTML=html||'<div class="empty"><i class="ti ti-calendar-off"></i>Geen beschikbare dagen deze week.</div>';
+}
+
+function autoEndTime(ds, winEndMin){
+  const startEl=document.getElementById(`book-start-${ds}`);
+  const endEl=document.getElementById(`book-end-${ds}`);
+  if(!startEl||!endEl)return;
+  const startMin=timeToMin(startEl.value);
+  const proposed=startMin+90;
+  endEl.value=minToTime(Math.min(proposed,winEndMin));
+}
+
+function toggleBookForm(id){
+  const el=document.getElementById(id);
+  if(el)el.style.display=el.style.display==='none'?'block':'none';
+}
+
+async function confirmBooking(ds,winStartStr,winEndStr){
+  const startVal=document.getElementById(`book-start-${ds}`).value;
+  const endVal=document.getElementById(`book-end-${ds}`).value;
+  const note=(document.getElementById(`book-note-${ds}`)?.value||'').trim();
+  const warnEl=document.getElementById(`book-warn-${ds}`);
+  warnEl.innerHTML='';
+
+  if(!startVal||!endVal){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Vul begin- en eindtijd in.</div>';return;}
+  const startMin=timeToMin(startVal),endMin=timeToMin(endVal);
+  const wsMin=timeToMin(winStartStr),weMin=timeToMin(winEndStr);
+  if(startMin>=endMin){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Begintijd moet vóór eindtijd liggen.</div>';return;}
+  if(startMin<wsMin||endMin>weMin){warnEl.innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Tijd valt buiten het bezoekvenster (${fmt24(winStartStr)}–${fmt24(winEndStr)}).</div>`;return;}
+  if(endMin-startMin<30){warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Minimale bezoekduur is 30 minuten.</div>';return;}
+
+  // Already booked this day?
+  if(bookings.find(b=>b.date===ds&&b.visitor_name===currentVisitor)){
+    warnEl.innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Je hebt al een bezoek ingepland op deze dag.</div>';return;
+  }
+
+  // Overlap check — warn but allow
+  const overlap=countOverlap(ds,startMin,endMin);
+  if(overlap>=maxOverlap){
+    warnEl.innerHTML=`<div class="msg warn"><i class="ti ti-alert-triangle"></i> Let op: er zijn al ${overlap} bezoekers in dit tijdvak (maximum is ${maxOverlap}). Je kunt toch boeken.</div>`;
+  }
+
+  setLoading(`btn-book-${ds}`,true);
+  const row={id:Date.now().toString()+Math.random().toString(36).slice(2),date:ds,start_time:startVal,end_time:endVal,visitor_name:currentVisitor,note};
+  const {error}=await sb.from('bookings').insert(row);
+  setLoading(`btn-book-${ds}`,false);
+  if(error){warnEl.innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Fout bij opslaan: ${error.message}</div>`;return;}
+  bookings.push(row);
+  showMsg('bezoek','<i class="ti ti-circle-check"></i> Bezoek ingepland! Tot dan 🎉','success');
+  renderBookingTimeline();renderStats();
+}
+
+async function cancelBooking(id){
+  if(!confirm('Jouw boeking annuleren?'))return;
+  const {error}=await sb.from('bookings').delete().eq('id',id);
+  if(error){showMsg('bezoek','Fout bij annuleren.','error');return;}
+  bookings=bookings.filter(b=>b.id!==id);
+  showMsg('bezoek','Boeking geannuleerd.','success');
+  renderBookingTimeline();renderStats();
+}
+
+// ── Visit windows admin ──
+function toggleDefaultEdit(){
+  const el=document.getElementById('default-window-edit');
+  if(el.style.display==='none'){
+    document.getElementById('def-start').value=defaultWinStart;
+    document.getElementById('def-end').value=defaultWinEnd;
+    el.style.display='block';
+  } else el.style.display='none';
+}
+async function saveDefaultWindow(){
+  const s=document.getElementById('def-start').value,e=document.getElementById('def-end').value;
+  if(!s||!e)return;
+  await Promise.all([upsertSetting('default_window_start',s),upsertSetting('default_window_end',e)]);
+  defaultWinStart=s;defaultWinEnd=e;
+  document.getElementById('default-window-display').textContent=fmt24(s)+' – '+fmt24(e);
+  document.getElementById('default-window-edit').style.display='none';
+  showMsg('beheer','Standaard venster opgeslagen!','success');
+}
+async function addWindow(){
+  const date=document.getElementById('win-date').value,start=document.getElementById('win-start').value,end=document.getElementById('win-end').value;
+  if(!date||!start||!end){showMsg('beheer','Vul datum en tijden in.','error');return;}
+  const existing=visitWindows.find(w=>w.date===date);
+  if(existing){await sb.from('visit_windows').update({start_time:start,end_time:end}).eq('id',existing.id);existing.start_time=start;existing.end_time=end;}
+  else{const row={id:Date.now().toString(),date,start_time:start,end_time:end};await sb.from('visit_windows').insert(row);visitWindows.push(row);}
+  showMsg('beheer','Venster opgeslagen!','success');renderWindowList();
+}
+async function closeWindow(){
+  const date=document.getElementById('win-date').value;
+  if(!date){showMsg('beheer','Selecteer een datum.','error');return;}
+  const existing=visitWindows.find(w=>w.date===date);
+  if(existing){await sb.from('visit_windows').update({start_time:'00:00',end_time:'00:00'}).eq('id',existing.id);existing.start_time='00:00';existing.end_time='00:00';}
+  else{const row={id:Date.now().toString(),date,start_time:'00:00',end_time:'00:00'};await sb.from('visit_windows').insert(row);visitWindows.push(row);}
+  showMsg('beheer','Dag gesloten!','success');renderWindowList();
+}
+async function deleteWindow(id){
+  await sb.from('visit_windows').delete().eq('id',id);
+  visitWindows=visitWindows.filter(w=>w.id!==id);
+  renderWindowList();
+}
+function renderWindowList(){
+  document.getElementById('default-window-display').textContent=fmt24(defaultWinStart)+' – '+fmt24(defaultWinEnd);
+  const el=document.getElementById('window-list');
+  const sorted=[...visitWindows].sort((a,b)=>a.date.localeCompare(b.date));
+  if(!sorted.length){el.innerHTML='<p style="font-size:13px;color:var(--text-tertiary)">Geen afwijkende vensters.</p>';return;}
+  el.innerHTML=sorted.map(w=>`
+    <div class="template-row">
+      <span style="font-size:13px;font-weight:600;min-width:90px">${w.date}</span>
+      <span style="font-size:13px;flex:1">${w.start_time==='00:00'&&w.end_time==='00:00'?'<span style="color:var(--error-text)">Gesloten</span>':fmt24(w.start_time)+' – '+fmt24(w.end_time)}</span>
+      <button class="btn danger sm" onclick="deleteWindow('${w.id}')"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+
+// ── Weekly activities ──
+function renderWeeklyActivities(){
+  const el=document.getElementById('weekly-activity-list');
+  if(!weeklyActivities.length){el.innerHTML='<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">Nog geen vaste activiteiten.</p>';return;}
+  el.innerHTML=[...weeklyActivities].sort((a,b)=>a.weekday-b.weekday||a.start_time.localeCompare(b.start_time)).map(a=>`
+    <div class="template-row">
+      <span style="font-weight:700;font-size:13px;color:var(--violet);min-width:30px">${NL_DAYS_SHORT[a.weekday]}</span>
+      <span style="font-size:13px;min-width:90px;font-variant-numeric:tabular-nums">${fmt24(a.start_time)}–${fmt24(a.end_time)}</span>
+      <span style="flex:1;font-size:13px;font-weight:600">${esc(a.title)}</span>
+      <button class="btn danger sm" onclick="deleteWeeklyActivity('${a.id}')"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+async function addWeeklyActivity(){
+  const weekday=parseInt(document.getElementById('wact-weekday').value),title=document.getElementById('wact-title').value.trim(),start=document.getElementById('wact-start').value,end=document.getElementById('wact-end').value,notes=document.getElementById('wact-notes').value.trim();
+  if(!title||!start||!end){showMsg('beheer','Vul alle velden in.','error');return;}
+  const row={id:Date.now().toString(),weekday,title,start_time:start,end_time:end,notes};
+  setLoading('btn-add-wact',true);
+  const {error}=await sb.from('weekly_activities').insert(row);
+  setLoading('btn-add-wact',false);
+  if(error){showMsg('beheer','Fout: '+error.message,'error');return;}
+  weeklyActivities.push(row);renderWeeklyActivities();
+  showMsg('beheer','Vaste activiteit toegevoegd!','success');
+  document.getElementById('wact-title').value='';document.getElementById('wact-notes').value='';
+}
+async function deleteWeeklyActivity(id){
+  if(!confirm('Verwijderen?'))return;
+  await sb.from('weekly_activities').delete().eq('id',id);
+  weeklyActivities=weeklyActivities.filter(a=>a.id!==id);renderWeeklyActivities();
+}
+
+// ── One-off activity ──
+async function addActivity(){
+  const date=document.getElementById('act-date').value,title=document.getElementById('act-title').value.trim(),start=document.getElementById('act-start').value,end=document.getElementById('act-end').value,notes=document.getElementById('act-notes').value.trim();
+  if(!date||!title||!start||!end){showMsg('beheer','Vul alle verplichte velden in.','error');return;}
+  const row={id:Date.now().toString(),date,title,start_time:start,end_time:end,notes};
+  setLoading('btn-add-act',true);
+  const {error}=await sb.from('activities').insert(row);
+  setLoading('btn-add-act',false);
+  if(error){showMsg('beheer','Fout: '+error.message,'error');return;}
+  activities.push(row);
+  showMsg('beheer','Activiteit toegevoegd!','success');
+  document.getElementById('act-title').value='';document.getElementById('act-notes').value='';
+  renderAdminBookings();
+}
+
+// ── Admin bookings ──
+async function deleteBookingAdmin(id){
+  if(!confirm('Boeking verwijderen?'))return;
+  await sb.from('bookings').delete().eq('id',id);
+  bookings=bookings.filter(b=>b.id!==id);renderAdminBookings();renderStats();
+}
+function renderAdminBookings(){
+  if(!isAdmin)return;
+  const sorted=[...bookings].sort((a,b)=>(a.date+a.start_time).localeCompare(b.date+b.start_time));
+  const el=document.getElementById('admin-booking-list');
+  if(!sorted.length){el.innerHTML='<div class="empty" style="padding:1rem">Nog geen boekingen.</div>';return;}
+  el.innerHTML=sorted.map(b=>`
+    <div class="event-item">
+      <div class="event-dot booking"></div>
+      <div class="event-time">${b.date}<br>${fmt24(b.start_time)}–${fmt24(b.end_time)}</div>
+      <div class="event-info">
+        <div class="event-title">${esc(b.visitor_name)}</div>
+        <div class="event-meta">${b.note?`<i>${esc(b.note)}</i>`:''}</div>
+      </div>
+      <button class="btn danger sm" onclick="deleteBookingAdmin('${b.id}')"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+
+// ── Admin auth ──
+function checkPin(){
+  const name=document.querySelector('#admin-chips .admin-chip.selected')?.dataset.name;
+  const p=document.getElementById('pin-input').value;
+  if(name&&adminNames.includes(name)&&p===pin){
+    isAdmin=true;
+    document.getElementById('admin-gate').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('admin-names-input').value=adminNames.join('\n');
+    document.getElementById('app-name-input').value=appName;
+    renderAdminBookings();renderWeeklyActivities();renderWindowList();
+  }else{document.getElementById('pin-error').style.display='flex';}
+}
+function lockAdmin(){
+  isAdmin=false;
+  document.getElementById('admin-gate').style.display='block';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('pin-input').value='';
+  document.getElementById('pin-error').style.display='none';
+}
+function renderAdminChips(){
+  document.getElementById('admin-chips').innerHTML=adminNames.map(n=>`<div class="admin-chip" data-name="${esc(n)}" onclick="selectAdminChip(this)">${esc(n)}</div>`).join('');
+  document.getElementById('admin-list-text').textContent=adminNames.join(', ');
+}
+function selectAdminChip(el){
+  document.querySelectorAll('.admin-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('pin-error').style.display='none';
+}
+async function changePin(){
+  const np=document.getElementById('new-pin').value;
+  if(!np||np.length<4){showMsg('beheer','PIN moet minimaal 4 tekens hebben.','error');return;}
+  await upsertSetting('pin',np);pin=np;
+  showMsg('beheer','PIN bijgewerkt!','success');document.getElementById('new-pin').value='';
+}
+async function changeWilPin(){
+  const np=document.getElementById('new-wil-pin').value;
+  if(!np||np.length<4){showMsg('beheer','PIN moet minimaal 4 tekens hebben.','error');return;}
+  await upsertSetting('wil_pin',np);wilPin=np;
+  showMsg('beheer','PIN voor Wil bijgewerkt!','success');document.getElementById('new-wil-pin').value='';
+}
+async function saveAdminNames(){
+  const names=document.getElementById('admin-names-input').value.split('\n').map(n=>n.trim()).filter(Boolean).slice(0,5);
+  if(!names.length){showMsg('beheer','Voer minimaal één naam in.','error');return;}
+  await upsertSetting('admin_names',names.join(','));
+  adminNames=names;renderAdminChips();
+  showMsg('beheer','Namen opgeslagen!','success');
+}
+async function saveAppName(){
+  const name=document.getElementById('app-name-input').value.trim();
+  if(!name)return;
+  await upsertSetting('app_name',name);appName=name;
+  document.getElementById('app-title').textContent=name;document.title=name;
+  showMsg('beheer','App naam opgeslagen!','success');
+}
+
+// ── Gastenboek ──────────────────────────────────────────────
+let gbMediaRecorder=null, gbChunks=[], gbStream=null, gbBlob=null, gbType=null, gbTimerInterval=null, gbSeconds=0;
+const GB_MAX_SEC=60;
+
+async function startRecording(type){
+  gbType=type;
+  try{
+    const constraints = type==='video'
+      ? {video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:true}
+      : {audio:true};
+    gbStream = await navigator.mediaDevices.getUserMedia(constraints);
+  }catch(e){
+    showMsg('gastenboek','Toegang tot microfoon/camera geweigerd. Controleer je browserinstellingen.','error');
+    return;
+  }
+
+  // Show preview
+  document.getElementById('gb-preview').style.display='block';
+  const vidPrev=document.getElementById('gb-video-preview');
+  const audInd=document.getElementById('gb-audio-indicator');
+  if(type==='video'){vidPrev.style.display='block';audInd.style.display='none';vidPrev.srcObject=gbStream;}
+  else{vidPrev.style.display='none';audInd.style.display='block';}
+
+  // Hide record buttons
+  document.getElementById('btn-rec-audio').style.display='none';
+  document.getElementById('btn-rec-video').style.display='none';
+
+  // Detect best supported mime type
+  gbChunks=[];
+  let mimeType='';
+  if(type==='video'){
+    const videoTypes=['video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+    mimeType=videoTypes.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  } else {
+    const audioTypes=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm','audio/ogg'];
+    mimeType=audioTypes.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  }
+  console.log('Using mimeType:', mimeType||'(browser default)');
+
+  try{
+    gbMediaRecorder = new MediaRecorder(gbStream, mimeType ? {mimeType} : {});
+  }catch(e){
+    // Fallback: let browser pick
+    gbMediaRecorder = new MediaRecorder(gbStream);
+  }
+  gbMediaRecorder.ondataavailable = e=>{ if(e.data&&e.data.size>0) gbChunks.push(e.data); };
+  gbMediaRecorder.onstop = finishRecording;
+  gbMediaRecorder.start(200);
+
+  // Timer
+  gbSeconds=0;
+  document.getElementById('gb-timer').textContent='0:00';
+  gbTimerInterval=setInterval(()=>{
+    gbSeconds++;
+    const m=Math.floor(gbSeconds/60), s=gbSeconds%60;
+    document.getElementById('gb-timer').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    if(gbSeconds>=GB_MAX_SEC) stopRecording();
+  },1000);
+}
+
+function stopRecording(){
+  if(gbMediaRecorder&&gbMediaRecorder.state!=='inactive') gbMediaRecorder.stop();
+  clearInterval(gbTimerInterval);
+  if(gbStream) gbStream.getTracks().forEach(t=>t.stop());
+}
+
+function finishRecording(){
+  // Use the actual mime type from the recorder or first chunk
+  const actualMime = gbMediaRecorder.mimeType || (gbChunks[0]?.type) || (gbType==='video'?'video/mp4':'audio/mp4');
+  gbBlob = new Blob(gbChunks, {type: actualMime});
+  console.log('Recorded blob:', gbBlob.size, 'bytes, type:', gbBlob.type);
+
+  // Hide preview, show playback
+  document.getElementById('gb-preview').style.display='none';
+  document.getElementById('gb-playback').style.display='block';
+
+  const url=URL.createObjectURL(gbBlob);
+  const vid=document.getElementById('gb-playback-video');
+  const aud=document.getElementById('gb-playback-audio');
+  if(gbType==='video'){vid.style.display='block';aud.style.display='none';vid.src=url;}
+  else{aud.style.display='block';vid.style.display='none';aud.src=url;}
+}
+
+function cancelRecording(){
+  stopRecording();
+  clearInterval(gbTimerInterval);
+  resetGastenboek();
+}
+
+function resetGastenboek(){
+  if(gbStream) gbStream.getTracks().forEach(t=>t.stop());
+  gbMediaRecorder=null; gbChunks=[]; gbBlob=null; gbStream=null;
+  clearInterval(gbTimerInterval);
+  document.getElementById('gb-preview').style.display='none';
+  document.getElementById('gb-playback').style.display='none';
+  document.getElementById('btn-rec-audio').style.display='';
+  document.getElementById('btn-rec-video').style.display='';
+  document.getElementById('gb-timer').textContent='0:00';
+  document.getElementById('gb-note').value='';
+  const vid=document.getElementById('gb-video-preview');
+  vid.srcObject=null;
+}
+
+async function sendGastenboek(){
+  if(!gbBlob||gbBlob.size===0){showMsg('gastenboek','Geen opname gevonden of opname is leeg.','error');return;}
+  const note=document.getElementById('gb-note').value.trim();
+  setLoading('btn-send-gb',true);
+
+  // Derive file extension from actual blob mime type
+  const mime=gbBlob.type||'';
+  let ext='webm';
+  if(mime.includes('mp4'))ext='mp4';
+  else if(mime.includes('ogg'))ext='ogg';
+  else if(mime.includes('webm'))ext='webm';
+
+  const safeName=currentVisitor.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_').toLowerCase();
+  const fileName=`${Date.now()}_${safeName}.${ext}`;
+
+  // Upload to Supabase Storage
+  const {data:upData, error:upErr} = await sb.storage
+    .from('gastenboek')
+    .upload(fileName, gbBlob, {contentType: mime||'application/octet-stream', upsert:false});
+
+  if(upErr){
+    showMsg('gastenboek','Fout bij uploaden: '+upErr.message,'error');
+    setLoading('btn-send-gb',false);
+    return;
+  }
+
+  // Get public URL
+  const {data:urlData} = sb.storage.from('gastenboek').getPublicUrl(fileName);
+  const fileUrl = urlData.publicUrl;
+
+  // Save to gastenboek table
+  const row={
+    id: Date.now().toString()+Math.random().toString(36).slice(2),
+    visitor_name: currentVisitor,
+    type: gbType,
+    file_url: fileUrl,
+    duration_sec: gbSeconds,
+    note,
+  };
+  const {error:dbErr} = await sb.from('gastenboek').insert(row);
+  setLoading('btn-send-gb',false);
+  if(dbErr){showMsg('gastenboek','Fout bij opslaan: '+dbErr.message,'error');return;}
+
+  gastenboekItems.unshift(row);
+  showMsg('gastenboek','<i class="ti ti-circle-check"></i> Bericht verstuurd! Wil zal het zeker waarderen 💛','success');
+  resetGastenboek();
+  renderGastenboek();
+}
+
+function replayGastenboek(){
+  const vid=document.getElementById('gb-playback-video');
+  const aud=document.getElementById('gb-playback-audio');
+  if(vid.style.display!=='none'){ vid.currentTime=0; vid.play(); }
+  else { aud.currentTime=0; aud.play(); }
+}
+
+function replayQuickRec(){
+  const vid=document.getElementById('qr-pb-video');
+  const aud=document.getElementById('qr-pb-audio');
+  if(vid.style.display!=='none'){ vid.currentTime=0; vid.play(); }
+  else { aud.currentTime=0; aud.play(); }
+}
+
+async function deleteGastenboekItem(id, fileUrl){
+  if(!confirm('Dit bericht definitief verwijderen?')) return;
+  // Extract file path from URL
+  const parts = fileUrl.split('/gastenboek/');
+  const filePath = parts.length>1 ? parts[1] : null;
+  // Delete from storage
+  if(filePath) await sb.storage.from('gastenboek').remove([filePath]);
+  // Delete from db
+  const {error} = await sb.from('gastenboek').delete().eq('id', id);
+  if(error){ alert('Fout bij verwijderen: '+error.message); return; }
+  gastenboekItems = gastenboekItems.filter(g=>g.id!==id);
+  renderGastenboek();
+}
+
+function renderGastenboek(){
+  const el=document.getElementById('gb-list');
+  if(!gastenboekItems.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-message-off"></i>Nog geen berichten.<br>Wees de eerste!</div>';
+    return;
+  }
+  // Add play-all button at top
+  el.innerHTML=`<div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+    <button class="btn primary sm" onclick="gbPlayAll(0)" id="btn-play-all"><i class="ti ti-player-play"></i> Alles afspelen</button>
+    <button class="btn sm" onclick="gbStopAll()" id="btn-stop-all" style="display:none"><i class="ti ti-player-stop"></i> Stoppen</button>
+    <span id="gb-now-playing" style="font-size:12px;color:var(--text-secondary)"></span>
+  </div>`+gastenboekItems.map((g,idx)=>{
+    const date=g.created_at ? new Date(g.created_at).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+    const initial=g.visitor_name.charAt(0).toUpperCase();
+    const dur=g.duration_sec ? `${Math.floor(g.duration_sec/60)}:${String(g.duration_sec%60).padStart(2,'0')}` : '';
+    const player=g.type==='video'
+      ? `<video id="gb-media-${idx}" src="${esc(g.file_url)}" controls playsinline style="width:100%;max-height:200px;border-radius:10px;background:#000;margin-top:8px" onended="gbPlayAll(${idx+1})"></video>`
+      : `<audio id="gb-media-${idx}" src="${esc(g.file_url)}" controls style="width:100%;margin-top:8px" onended="gbPlayAll(${idx+1})"></audio>`;
+    return `<div class="gb-entry" id="gb-entry-${idx}">
+      <div class="gb-entry-header">
+        <div class="gb-avatar">${initial}</div>
+        <div class="gb-meta">
+          <div class="gb-name">${esc(g.visitor_name)}</div>
+          <div class="gb-date">${date}${dur?' · '+dur:''}</div>
+        </div>
+        <span class="gb-type-badge ${g.type==='video'?'gb-type-video':'gb-type-audio'}">
+          <i class="ti ti-${g.type==='video'?'video':'microphone'}" style="font-size:10px"></i> ${g.type==='video'?'Video':'Stem'}
+        </span>
+      </div>
+      ${g.note?`<div class="gb-note">"${esc(g.note)}"</div>`:''}
+      ${player}
+      <div style="margin-top:10px;text-align:right">
+        <button class="btn danger sm" onclick="deleteGastenboekItem('${g.id}','${esc(g.file_url)}')"><i class="ti ti-trash"></i> Verwijderen</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let gbIsPlaying=false;
+function gbPlayAll(idx){
+  if(idx>=gastenboekItems.length){ gbStopAll(); return; }
+  gbIsPlaying=true;
+  document.getElementById('btn-play-all').style.display='none';
+  document.getElementById('btn-stop-all').style.display='';
+  // Pause all others first
+  gastenboekItems.forEach((_,i)=>{
+    const m=document.getElementById(`gb-media-${i}`);
+    if(m&&i!==idx){m.pause();m.currentTime=0;}
+  });
+  const media=document.getElementById(`gb-media-${idx}`);
+  const entry=document.getElementById(`gb-entry-${idx}`);
+  if(!media){gbStopAll();return;}
+  // Highlight current
+  document.querySelectorAll('.gb-entry').forEach(e=>e.style.outline='none');
+  entry.style.outline='2px solid var(--violet)';
+  entry.scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('gb-now-playing').textContent=`Nu: ${gastenboekItems[idx].visitor_name} (${idx+1}/${gastenboekItems.length})`;
+  media.play().catch(()=>gbPlayAll(idx+1));
+}
+
+function gbStopAll(){
+  gbIsPlaying=false;
+  gastenboekItems.forEach((_,i)=>{
+    const m=document.getElementById(`gb-media-${i}`);
+    if(m){m.pause();m.currentTime=0;}
+  });
+  document.querySelectorAll('.gb-entry').forEach(e=>e.style.outline='none');
+  const pa=document.getElementById('btn-play-all');
+  const sa=document.getElementById('btn-stop-all');
+  const np=document.getElementById('gb-now-playing');
+  if(pa)pa.style.display='';
+  if(sa)sa.style.display='none';
+  if(np)np.textContent='';
+}
+
+// ── Quick record (inline in Vandaag) ────────────────────────
+let qrMediaRecorder=null, qrChunks=[], qrStream=null, qrBlob=null, qrType=null, qrTimerInterval=null, qrSeconds=0, qrVisitorName='';
+
+function openQuickRec(visitorName){
+  qrVisitorName=visitorName;
+  document.getElementById('quick-rec-subtitle').textContent=`Van: ${visitorName}`;
+  document.getElementById('qr-choose').style.display='flex';
+  document.getElementById('qr-recording').style.display='none';
+  document.getElementById('qr-playback').style.display='none';
+  document.getElementById('msg-quickrec').innerHTML='';
+  document.getElementById('quick-rec-overlay').style.display='flex';
+}
+
+function closeQuickRec(){
+  qrStopStream();
+  clearInterval(qrTimerInterval);
+  document.getElementById('quick-rec-overlay').style.display='none';
+  const vid=document.getElementById('qr-video-prev');
+  vid.srcObject=null; vid.src='';
+}
+
+function qrStopStream(){
+  if(qrStream) qrStream.getTracks().forEach(t=>t.stop());
+  qrStream=null;
+}
+
+async function quickStartRec(type){
+  qrType=type;
+  try{
+    const constraints=type==='video'?{video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:true}:{audio:true};
+    qrStream=await navigator.mediaDevices.getUserMedia(constraints);
+  }catch(e){
+    document.getElementById('msg-quickrec').innerHTML='<div class="msg error"><i class="ti ti-alert-circle"></i> Toegang geweigerd. Controleer je browserinstellingen.</div>';
+    return;
+  }
+
+  document.getElementById('qr-choose').style.display='none';
+  document.getElementById('qr-recording').style.display='block';
+
+  const vidPrev=document.getElementById('qr-video-prev');
+  const audInd=document.getElementById('qr-audio-ind');
+  if(type==='video'){vidPrev.style.display='block';audInd.style.display='none';vidPrev.srcObject=qrStream;}
+  else{vidPrev.style.display='none';audInd.style.display='block';}
+
+  qrChunks=[];
+  let mimeType='';
+  if(type==='video'){
+    const vt=['video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+    mimeType=vt.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  } else {
+    const at=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm','audio/ogg'];
+    mimeType=at.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  }
+
+  try{ qrMediaRecorder=new MediaRecorder(qrStream,mimeType?{mimeType}:{}); }
+  catch(e){ qrMediaRecorder=new MediaRecorder(qrStream); }
+
+  qrMediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)qrChunks.push(e.data);};
+  qrMediaRecorder.onstop=qrFinish;
+  qrMediaRecorder.start(200);
+
+  qrSeconds=0;
+  document.getElementById('qr-timer').textContent='0:00';
+  qrTimerInterval=setInterval(()=>{
+    qrSeconds++;
+    const m=Math.floor(qrSeconds/60),s=qrSeconds%60;
+    document.getElementById('qr-timer').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    if(qrSeconds>=GB_MAX_SEC) quickStopRec();
+  },1000);
+}
+
+function quickStopRec(){
+  if(qrMediaRecorder&&qrMediaRecorder.state!=='inactive') qrMediaRecorder.stop();
+  clearInterval(qrTimerInterval);
+  qrStopStream();
+}
+
+function qrFinish(){
+  const actualMime=qrMediaRecorder.mimeType||(qrChunks[0]?.type)||(qrType==='video'?'video/mp4':'audio/mp4');
+  qrBlob=new Blob(qrChunks,{type:actualMime});
+  document.getElementById('qr-recording').style.display='none';
+  document.getElementById('qr-playback').style.display='block';
+  const url=URL.createObjectURL(qrBlob);
+  const vid=document.getElementById('qr-pb-video');
+  const aud=document.getElementById('qr-pb-audio');
+  if(qrType==='video'){vid.style.display='block';aud.style.display='none';vid.src=url;}
+  else{aud.style.display='block';vid.style.display='none';aud.src=url;}
+}
+
+function quickRestart(){
+  qrBlob=null; qrChunks=[];
+  document.getElementById('qr-playback').style.display='none';
+  document.getElementById('qr-choose').style.display='flex';
+  document.getElementById('qr-note').value='';
+  const vid=document.getElementById('qr-pb-video'); vid.src='';
+  const aud=document.getElementById('qr-pb-audio'); aud.src='';
+}
+
+async function quickSend(){
+  if(!qrBlob||qrBlob.size===0){
+    document.getElementById('msg-quickrec').innerHTML='<div class="msg error">Geen opname gevonden.</div>';
+    return;
+  }
+  const note=document.getElementById('qr-note').value.trim();
+  setLoading('btn-qr-send',true);
+
+  const mime=qrBlob.type||'';
+  let ext='webm';
+  if(mime.includes('mp4'))ext='mp4';
+  else if(mime.includes('ogg'))ext='ogg';
+  const safeName=qrVisitorName.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_').toLowerCase();
+  const fileName=`${Date.now()}_${safeName}.${ext}`;
+
+  const {error:upErr}=await sb.storage.from('gastenboek').upload(fileName,qrBlob,{contentType:mime||'application/octet-stream',upsert:false});
+  if(upErr){
+    document.getElementById('msg-quickrec').innerHTML=`<div class="msg error">Fout bij uploaden: ${upErr.message}</div>`;
+    setLoading('btn-qr-send',false);
+    return;
+  }
+
+  const {data:urlData}=sb.storage.from('gastenboek').getPublicUrl(fileName);
+  const row={
+    id:Date.now().toString()+Math.random().toString(36).slice(2),
+    visitor_name:qrVisitorName,
+    type:qrType,
+    file_url:urlData.publicUrl,
+    duration_sec:qrSeconds,
+    note,
+  };
+  const {error:dbErr}=await sb.from('gastenboek').insert(row);
+  setLoading('btn-qr-send',false);
+  if(dbErr){
+    document.getElementById('msg-quickrec').innerHTML=`<div class="msg error">Fout bij opslaan: ${dbErr.message}</div>`;
+    return;
+  }
+
+  gastenboekItems.unshift(row);
+  document.getElementById('msg-quickrec').innerHTML='<div class="msg success"><i class="ti ti-circle-check"></i> Verstuurd! 💛</div>';
+  setTimeout(()=>closeQuickRec(),1800);
+}
+
+// ── Secretaresse ────────────────────────────────────────────
+function checkSecPin(){
+  const entered=document.getElementById('sec-pin-input').value;
+  const adminName=document.querySelector('#admin-chips .admin-chip.selected')?.dataset.name;
+  const validAdmin=adminName&&adminNames.includes(adminName)&&entered===pin;
+  const validSec=entered===secPin;
+  if(validSec||validAdmin){
+    isSec=true;
+    document.getElementById('sec-gate').style.display='none';
+    document.getElementById('sec-content').style.display='block';
+    renderSecBookingSlots();
+    renderSecDeleteList();
+    renderGbLink();
+  } else {
+    document.getElementById('sec-pin-error').style.display='flex';
+  }
+}
+
+function changeWeekSec(dir){ weekOffsetSec+=dir; renderSecBookingSlots(); }
+function changeWeekSecDel(dir){ weekOffsetSecDel+=dir; renderSecDeleteList(); }
+
+function renderSecBookingSlots(){
+  const days=getWeekDates(weekOffsetSec);
+  document.getElementById('week-label-sec').textContent=fmtWeekLabel(days);
+  const c=document.getElementById('sec-booking-slots');
+  const today=fmtDate(new Date());
+  let html='';
+  days.forEach(d=>{
+    const ds=fmtDate(d);
+    if(ds<today) return;
+    const win=getWindowForDate(ds);
+    const isClosed=win.start_time===win.end_time||(win.start_time==='00:00'&&win.end_time==='00:00');
+    if(isClosed) return;
+    const dayBookings=bookings.filter(b=>b.date===ds).sort((a,b)=>a.start_time.localeCompare(b.start_time));
+    html+=`<div style="margin-bottom:14px">
+      <div class="day-header"><i class="ti ti-calendar-week"></i>${cap(NL_DAYS[d.getDay()])} ${d.getDate()} ${NL_MON[d.getMonth()]}</div>
+      <div class="book-form" style="margin-top:8px">
+        <h4><i class="ti ti-user-plus"></i> Afspraak maken</h4>
+        <div class="form-row cols3" style="margin-bottom:8px">
+          <div><label>Naam</label><input type="text" id="sec-name-${ds}" placeholder="Naam bezoeker" /></div>
+          <div><label>Begintijd</label><input type="time" id="sec-start-${ds}" value="${win.start_time}" oninput="secAutoEnd('${ds}',${timeToMin(win.end_time)})" /></div>
+          <div><label>Eindtijd</label><input type="time" id="sec-end-${ds}" value="${minToTime(Math.min(timeToMin(win.start_time)+90,timeToMin(win.end_time)))}" /></div>
+        </div>
+        <button class="btn primary sm" onclick="secMakeBooking('${ds}','${win.start_time}','${win.end_time}')"><i class="ti ti-plus"></i> Inplannen</button>
+      </div>
+      ${dayBookings.length?`<div style="margin-top:8px;font-size:12px;color:var(--text-secondary)">${dayBookings.length} bezoeker(s): ${dayBookings.map(b=>esc(b.visitor_name)+' ('+fmt24(b.start_time)+'–'+fmt24(b.end_time)+')').join(', ')}</div>`:''}
+    </div>`;
+  });
+  c.innerHTML=html||'<div class="empty" style="padding:1rem">Geen beschikbare dagen deze week.</div>';
+}
+
+function secAutoEnd(ds, winEndMin){
+  const startEl=document.getElementById(`sec-start-${ds}`);
+  const endEl=document.getElementById(`sec-end-${ds}`);
+  if(!startEl||!endEl) return;
+  endEl.value=minToTime(Math.min(timeToMin(startEl.value)+90, winEndMin));
+}
+
+async function secMakeBooking(ds, winStartStr, winEndStr){
+  const name=document.getElementById(`sec-name-${ds}`)?.value.trim();
+  const startVal=document.getElementById(`sec-start-${ds}`)?.value;
+  const endVal=document.getElementById(`sec-end-${ds}`)?.value;
+  if(!name){showMsg('sec','Vul een naam in.','error');return;}
+  if(!startVal||!endVal){showMsg('sec','Vul begin- en eindtijd in.','error');return;}
+  const startMin=timeToMin(startVal),endMin=timeToMin(endVal);
+  if(startMin>=endMin){showMsg('sec','Begintijd moet vóór eindtijd liggen.','error');return;}
+  if(startMin<timeToMin(winStartStr)||endMin>timeToMin(winEndStr)){
+    showMsg('sec',`Tijd valt buiten het bezoekvenster (${fmt24(winStartStr)}–${fmt24(winEndStr)}).`,'error');return;
+  }
+  if(bookings.find(b=>b.date===ds&&b.visitor_name===name)){
+    showMsg('sec',`${name} heeft al een afspraak op deze dag.`,'error');return;
+  }
+  const row={id:Date.now().toString()+Math.random().toString(36).slice(2),date:ds,start_time:startVal,end_time:endVal,visitor_name:name,note:'(via secretaresse)'};
+  const {error}=await sb.from('bookings').insert(row);
+  if(error){showMsg('sec','Fout bij opslaan: '+error.message,'error');return;}
+  bookings.push(row);
+  showMsg('sec',`<i class="ti ti-circle-check"></i> Afspraak ingepland voor ${esc(name)}!`,'success');
+  renderSecBookingSlots();
+  renderSecDeleteList();
+  renderStats();
+}
+
+function renderSecDeleteList(){
+  const days=getWeekDates(weekOffsetSecDel);
+  document.getElementById('week-label-sec-del').textContent=fmtWeekLabel(days);
+  const c=document.getElementById('sec-delete-list');
+  const today=fmtDate(new Date());
+  let html='',has=false;
+  days.forEach(d=>{
+    const ds=fmtDate(d);
+    const dayBookings=bookings.filter(b=>b.date===ds).sort((a,b)=>a.start_time.localeCompare(b.start_time));
+    if(!dayBookings.length) return;
+    has=true;
+    html+=`<div class="day-header"><i class="ti ti-calendar-week"></i>${cap(NL_DAYS[d.getDay()])} ${d.getDate()} ${NL_MON[d.getMonth()]}</div>`;
+    dayBookings.forEach(b=>{
+      html+=`<div class="event-item">
+        <div class="event-dot booking"></div>
+        <div class="event-time">${fmt24(b.start_time)} – ${fmt24(b.end_time)}</div>
+        <div class="event-info">
+          <div class="event-title">${esc(b.visitor_name)}</div>
+          ${b.note?`<div class="event-meta"><i>${esc(b.note)}</i></div>`:''}
+        </div>
+        <button class="btn danger sm" onclick="secDeleteBooking('${b.id}','${esc(b.visitor_name)}')"><i class="ti ti-trash"></i></button>
+      </div>`;
+    });
+  });
+  c.innerHTML=has?html:'<div class="empty" style="padding:1rem">Geen afspraken deze week.</div>';
+}
+
+async function secDeleteBooking(id, name){
+  if(!confirm(`Afspraak van ${name} verwijderen?`)) return;
+  const {error}=await sb.from('bookings').delete().eq('id',id);
+  if(error){showMsg('sec','Fout bij verwijderen.','error');return;}
+  bookings=bookings.filter(b=>b.id!==id);
+  showMsg('sec',`<i class="ti ti-circle-check"></i> Afspraak van ${esc(name)} verwijderd.`,'success');
+  renderSecBookingSlots();
+  renderSecDeleteList();
+  renderStats();
+}
+
+function renderGbLink(){
+  const base=window.location.href.replace(/\/[^\/]*$/, '');
+  // Works whether served as index.html or bezoek-mama.html
+  const linkUrl=window.location.origin+window.location.pathname.replace(/\/?(index|bezoek-mama)\.html$/,'')+'/gastenboek.html';
+  document.getElementById('gb-link-display').textContent=linkUrl;
+}
+
+function copyGbLink(){
+  const txt=document.getElementById('gb-link-display').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    showMsgSec('<i class="ti ti-circle-check"></i> Link gekopieerd!','success');
+  }).catch(()=>{
+    showMsgSec('Kopiëren mislukt — selecteer de link handmatig.','error');
+  });
+}
+
+function openGbLink(){
+  const txt=document.getElementById('gb-link-display').textContent;
+  window.open(txt,'_blank');
+}
+
+function showMsgSec(text,type){
+  const el=document.getElementById('msg-sec-link');
+  el.innerHTML=`<div class="msg ${type}">${text}</div>`;
+  setTimeout(()=>{el.innerHTML='';},3000);
+}
+
+async function changeSecPin(){
+  const np=document.getElementById('new-sec-pin').value;
+  if(!np||np.length<4){showMsg('beheer','PIN moet minimaal 4 tekens hebben.','error');return;}
+  await upsertSetting('secretaresse_pin',np); secPin=np;
+  showMsg('beheer','Secretaresse PIN bijgewerkt!','success');
+  document.getElementById('new-sec-pin').value='';
+}
+
+async function changeGbLinkPin(){
+  const np=document.getElementById('new-gb-link-pin').value;
+  if(!np||np.length<4){showMsgSec('PIN moet minimaal 4 tekens hebben.','error');return;}
+  await upsertSetting('gastenboek_link_pin',np); gbLinkPin=np;
+  showMsgSec('PIN bijgewerkt!','success');
+  document.getElementById('new-gb-link-pin').value='';
+}
+
+// ── Utilities ──
+function showMsg(where,text,type){
+  const el=document.getElementById('msg-'+where);
+  el.innerHTML=`<div class="msg ${type}">${text}</div>`;
+  setTimeout(()=>{el.innerHTML='';},5000);
+}
+function setLoading(btnId,loading){
+  const btn=document.getElementById(btnId);if(!btn)return;
+  btn.disabled=loading;
+  if(loading)btn.dataset.orig=btn.innerHTML;
+  btn.innerHTML=loading?'<div class="spinner dark"></div>':btn.dataset.orig;
+}
+
+// ── Realtime ──
+sb.channel('realtime-wil-v2')
+  .on('postgres_changes',{event:'*',schema:'public',table:'bookings'},p=>{
+    if(p.eventType==='INSERT')bookings.push(p.new);
+    else if(p.eventType==='UPDATE'){const i=bookings.findIndex(b=>b.id===p.new.id);if(i>-1)bookings[i]=p.new;}
+    else if(p.eventType==='DELETE')bookings=bookings.filter(b=>b.id!==p.old.id);
+    renderSchedule();renderBookingTimeline();renderStats();
+  })
+  .on('postgres_changes',{event:'*',schema:'public',table:'activities'},p=>{
+    if(p.eventType==='INSERT')activities.push(p.new);
+    else if(p.eventType==='UPDATE'){const i=activities.findIndex(a=>a.id===p.new.id);if(i>-1)activities[i]=p.new;}
+    else if(p.eventType==='DELETE')activities=activities.filter(a=>a.id!==p.old.id);
+    renderSchedule();
+  })
+  .subscribe();
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.activeElement?.id==='visitor-name-input')setVisitor();
+  if(e.key==='Enter'&&document.activeElement?.id==='pin-input')checkPin();
+  if(e.key==='Enter'&&document.activeElement?.id==='gb-pin-input')checkGbPin();
+  if(e.key==='Enter'&&document.activeElement?.id==='sec-pin-input')checkSecPin();
+});
+
+
+function showEventPopup(data){
+  const d = typeof data === 'string' ? JSON.parse(data) : data;
+  const isAct = d.type === 'activiteit';
+  const badge = document.getElementById('ep-badge');
+  badge.textContent = isAct ? 'Activiteit' : 'Bezoek';
+  badge.style.background = isAct ? 'var(--teal-light)' : 'var(--violet-light)';
+  badge.style.color = isAct ? 'var(--teal-text)' : 'var(--violet-text)';
+  document.getElementById('ep-title').textContent = d.title;
+  document.getElementById('ep-time').innerHTML = `<i class="ti ti-clock" style="font-size:14px;color:var(--violet)"></i> ${d.start.slice(0,5)} – ${d.end.slice(0,5)}`;
+  const notesEl = document.getElementById('ep-notes');
+  notesEl.textContent = d.notes || '';
+  notesEl.style.display = d.notes ? 'block' : 'none';
+  document.getElementById('event-popup-overlay').style.display='flex';
+}
+
+function closeEventPopup(){
+  document.getElementById('event-popup-overlay').style.display='none';
+}
+
+// ── Auto-refresh every 5 minutes (only when idle) ──────────
+let lastInteraction = Date.now();
+const IDLE_THRESHOLD = 30 * 1000;      // consider idle after 30s of no interaction
+const REFRESH_INTERVAL = 5 * 60 * 1000; // refresh every 5 minutes
+
+// Track user interaction
+['click','touchstart','keydown','scroll'].forEach(ev =>
+  document.addEventListener(ev, () => { lastInteraction = Date.now(); }, {passive:true})
+);
+
+async function backgroundRefresh(){
+  const isIdle = Date.now() - lastInteraction > IDLE_THRESHOLD;
+  if(!isIdle) return; // user is active — skip silently
+
+  try {
+    await loadAll();
+    // Re-render whichever tab is currently active
+    const active = document.querySelector('.section.active')?.id;
+    if(active === 'tab-agenda')    renderSchedule();
+    if(active === 'tab-vandaag')   renderDayView();
+    if(active === 'tab-bezoek')    renderBookingTimeline();
+    if(active === 'tab-gastenboek' &&
+       document.getElementById('gb-content')?.style.display !== 'none') renderGastenboek();
+    // Update title & app name in case it changed
+    document.getElementById('app-title').textContent = appName;
+    document.title = appName;
+  } catch(e) {
+    console.warn('Background refresh failed:', e);
+  }
+}
+
+setInterval(backgroundRefresh, REFRESH_INTERVAL);
+
+boot();
+</script>
+</body>
+</html>

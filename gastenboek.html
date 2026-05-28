@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gastenboek – Wil van der Burg</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg-secondary:#fdf6ff;--bg-tertiary:#f3eafe;
+  --text:#1e1030;--text-secondary:#6b5f80;--text-tertiary:#a898bb;
+  --border:rgba(120,60,180,0.13);--border-md:rgba(120,60,180,0.25);
+  --radius-md:10px;--radius-lg:16px;
+  --violet:#7c3aed;--violet-light:#ede9fe;--violet-text:#5b21b6;
+  --rose:#e11d78;--rose-light:#fce7f3;--rose-text:#9d174d;
+  --teal:#0d9488;--teal-light:#ccfbf1;--teal-text:#065f46;
+  --success-bg:#d1fae5;--success-text:#065f46;
+  --error-bg:#ffe4e6;--error-text:#9f1239;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#160d24;--bg-secondary:#1f1430;--bg-tertiary:#120a1e;
+  --text:#f0eafa;--text-secondary:#b8a8d0;--text-tertiary:#7a6890;
+  --border:rgba(180,130,255,0.12);--border-md:rgba(180,130,255,0.22);
+  --violet-light:#2e1f55;--violet-text:#c4b5fd;
+  --rose-light:#3b0a20;--rose-text:#fda4af;
+  --success-bg:#022c16;--success-text:#6ee7b7;
+  --error-bg:#3b0011;--error-text:#fda4af;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;color:var(--text);background:var(--bg-tertiary);min-height:100vh;}
+.wrap{max-width:600px;margin:0 auto;padding:0 1rem 3rem;}
+.banner{background:linear-gradient(135deg,#7c3aed 0%,#e11d78 60%,#f59e0b 100%);padding:1.5rem 1rem 3.5rem;margin-bottom:-2.5rem;}
+.banner h1{font-size:20px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.banner p{font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 8px rgba(120,60,180,0.06);}
+.card h2{font-size:16px;font-weight:600;margin-bottom:1rem;}
+label{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.4px;}
+input,textarea{width:100%;font-family:inherit;font-size:14px;padding:9px 11px;border:1.5px solid var(--border-md);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text);outline:none;}
+input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.btn{padding:9px 16px;border-radius:var(--radius-md);cursor:pointer;font-size:13px;font-family:inherit;border:1.5px solid var(--border-md);background:transparent;color:var(--text);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-weight:500;}
+.btn:hover{background:var(--bg-secondary);}
+.btn.primary{background:linear-gradient(135deg,var(--violet),var(--rose));color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(124,58,237,0.25);}
+.btn.primary:hover{opacity:0.9;}
+.btn.danger{color:var(--error-text);border-color:var(--error-text);}
+.btn.danger:hover{background:var(--error-bg);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+.msg{padding:10px 14px;border-radius:var(--radius-md);font-size:13px;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:8px;}
+.msg.success{background:var(--success-bg);color:var(--success-text);border:1px solid #6ee7b7;}
+.msg.error{background:var(--error-bg);color:var(--error-text);border:1px solid #fca5a5;}
+.step-indicator{display:flex;gap:6px;margin-bottom:1.5rem;justify-content:center;}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--border-md);}
+.step-dot.active{background:var(--violet);}
+.step-dot.done{background:var(--teal);}
+.pin-gate{text-align:center;padding:2rem 1rem;}
+.pin-gate h2{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--violet),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;}
+.gb-entry{background:var(--bg-secondary);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px;border:1px solid var(--border);}
+.gb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--rose));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;}
+.gb-type-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--rose-light);color:var(--rose-text);}
+.empty{text-align:center;padding:2rem;color:var(--text-tertiary);font-size:14px;}
+.empty i{font-size:28px;display:block;margin-bottom:8px;opacity:0.4;}
+#loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#7c3aed,#e11d78);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:100;}
+#loading-screen i{font-size:48px;color:#fff;animation:pulse 1.2s ease-in-out infinite;}
+#loading-screen p{font-size:15px;color:rgba(255,255,255,0.85);font-weight:500;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.spinner{width:22px;height:22px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+.spinner.dark{border-color:var(--border-md);border-top-color:var(--violet);}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rec-preview{background:linear-gradient(135deg,var(--violet-light),var(--rose-light));border-radius:var(--radius-lg);padding:16px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <i class="ti ti-heart"></i>
+  <p>Gastenboek laden...</p>
+  <div class="spinner"></div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="banner">
+    <div style="max-width:600px;margin:0 auto">
+      <h1><i class="ti ti-heart-filled"></i> Gastenboek Wil van der Burg</h1>
+      <p>Laat een videobericht achter en bekijk berichten van anderen</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- STAP 0: PIN -->
+    <div id="step-pin" class="card" style="margin-top:1rem">
+      <div class="pin-gate">
+        <h2>Welkom!</h2>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1.25rem">Voer de PIN in om het gastenboek te openen.</p>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <input id="link-pin-input" type="password" placeholder="PIN" style="max-width:180px;text-align:center" />
+          <button class="btn primary" onclick="checkLinkPin()"><i class="ti ti-lock-open"></i> Verder</button>
+        </div>
+        <div id="link-pin-error" class="msg error" style="display:none;margin-top:14px;justify-content:center"><i class="ti ti-alert-circle"></i> Verkeerde PIN.</div>
+      </div>
+    </div>
+
+    <!-- STAP 1: Naam -->
+    <div id="step-name" class="card" style="display:none;margin-top:1rem">
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <h2><i class="ti ti-user" style="color:var(--violet);margin-right:6px"></i>Wie ben jij?</h2>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">Jouw naam verschijnt bij jouw bericht in het gastenboek.</p>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="gb-visitor-name" placeholder="Jouw naam" />
+        <button class="btn primary" onclick="goToRecord()"><i class="ti ti-arrow-right"></i> Verder</button>
+      </div>
+    </div>
+
+    <!-- STAP 2: Video opnemen -->
+    <div id="step-record" class="card" style="display:none">
+      <div class="step-indicator">
+        <div class="step-dot done" id="dot1b"></div>
+        <div class="step-dot active" id="dot2b"></div>
+        <div class="step-dot" id="dot3b"></div>
+      </div>
+      <h2><i class="ti ti-video" style="color:var(--rose);margin-right:6px"></i>Neem je videobericht op</h2>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1rem">Max. 1 minuut. Wil kijkt straks jouw bericht terug!</p>
+
+      <!-- Choose -->
+      <div id="gb-choose">
+        <button class="btn primary" style="width:100%;justify-content:center;padding:14px" onclick="gbStartRec()">
+          <i class="ti ti-video"></i> Camera starten & opnemen
+        </button>
+      </div>
+
+      <!-- Recording -->
+      <div id="gb-recording" style="display:none">
+        <video id="gb-vid-prev" autoplay muted playsinline style="width:100%;max-height:240px;border-radius:12px;background:#000;margin-bottom:10px"></video>
+        <div style="text-align:center;font-size:28px;font-weight:700;color:var(--rose);margin-bottom:10px;font-variant-numeric:tabular-nums" id="gb-rec-timer">0:00</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button class="btn danger" onclick="gbStopRec()"><i class="ti ti-square-filled"></i> Stop opname</button>
+          <button class="btn" onclick="gbCancelRec()"><i class="ti ti-x"></i> Annuleren</button>
+        </div>
+      </div>
+
+      <!-- Playback -->
+      <div id="gb-playback-area" style="display:none">
+        <video id="gb-vid-playback" controls playsinline style="width:100%;max-height:240px;border-radius:12px;background:#000;margin-bottom:10px"></video>
+        <div style="margin-bottom:10px">
+          <label>Korte tekst (optioneel)</label>
+          <input type="text" id="gb-pb-note" placeholder="bijv. Fijn om je te zien, Wil! 💛" />
+        </div>
+        <div id="msg-gb-send"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="btn-gb-send" onclick="gbSend()"><i class="ti ti-send"></i> Versturen</button>
+          <button class="btn" onclick="gbReplay()"><i class="ti ti-player-play"></i> Terugkijken</button>
+          <button class="btn" onclick="gbCancelRec()"><i class="ti ti-refresh"></i> Opnieuw</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAP 3: Berichten bekijken -->
+    <div id="step-view" style="display:none">
+      <div class="card">
+        <h2><i class="ti ti-heart" style="color:var(--rose);margin-right:6px"></i>Berichten voor Wil</h2>
+        <div id="gb-messages"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL='https://ozqocybvmehmqiyfhejv.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96cW9jeWJ2bWVobXFpeWZoZWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDE1NzMsImV4cCI6MjA5NTQ3NzU3M30.mK8HS29ldrZkNT8oOWEXulVAc4mdVsG0j_xWK3J1PNs';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const GB_MAX_SEC=60;
+
+let gbLinkPin='1234',gbItems=[];
+let gbStream=null,gbRecorder=null,gbChunks=[],gbBlob=null,gbSeconds=0,gbTimerInt=null;
+let visitorName='';
+
+async function boot(){
+  try{
+    const {data}=await sb.from('settings').select('*');
+    const sm=Object.fromEntries((data||[]).map(r=>[r.key,r.value]));
+    gbLinkPin=sm.gastenboek_link_pin||'1234';
+    const {data:gb}=await sb.from('gastenboek').select('*').order('created_at',{ascending:false});
+    gbItems=gb||[];
+  }catch(e){console.error(e);}
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+function checkLinkPin(){
+  const v=document.getElementById('link-pin-input').value;
+  if(v===gbLinkPin){
+    document.getElementById('step-pin').style.display='none';
+    document.getElementById('step-name').style.display='block';
+  } else {
+    document.getElementById('link-pin-error').style.display='flex';
+  }
+}
+
+function goToRecord(){
+  visitorName=document.getElementById('gb-visitor-name').value.trim();
+  if(!visitorName){document.getElementById('gb-visitor-name').focus();return;}
+  document.getElementById('step-name').style.display='none';
+  document.getElementById('step-record').style.display='block';
+}
+
+async function gbStartRec(){
+  try{
+    gbStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:true});
+  }catch(e){
+    alert('Toegang tot camera/microfoon geweigerd. Controleer je browserinstellingen.');return;
+  }
+  document.getElementById('gb-choose').style.display='none';
+  document.getElementById('gb-recording').style.display='block';
+  document.getElementById('gb-vid-prev').srcObject=gbStream;
+
+  gbChunks=[];
+  const vt=['video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  const mimeType=vt.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  try{gbRecorder=new MediaRecorder(gbStream,mimeType?{mimeType}:{});}
+  catch(e){gbRecorder=new MediaRecorder(gbStream);}
+  gbRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)gbChunks.push(e.data);};
+  gbRecorder.onstop=gbFinish;
+  gbRecorder.start(200);
+
+  gbSeconds=0;
+  document.getElementById('gb-rec-timer').textContent='0:00';
+  gbTimerInt=setInterval(()=>{
+    gbSeconds++;
+    const m=Math.floor(gbSeconds/60),s=gbSeconds%60;
+    document.getElementById('gb-rec-timer').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    if(gbSeconds>=GB_MAX_SEC)gbStopRec();
+  },1000);
+}
+
+function gbStopRec(){
+  if(gbRecorder&&gbRecorder.state!=='inactive')gbRecorder.stop();
+  clearInterval(gbTimerInt);
+  if(gbStream)gbStream.getTracks().forEach(t=>t.stop());
+  gbStream=null;
+}
+
+function gbFinish(){
+  const mime=gbRecorder.mimeType||(gbChunks[0]?.type)||'video/mp4';
+  gbBlob=new Blob(gbChunks,{type:mime});
+  document.getElementById('gb-recording').style.display='none';
+  document.getElementById('gb-playback-area').style.display='block';
+  const url=URL.createObjectURL(gbBlob);
+  document.getElementById('gb-vid-playback').src=url;
+}
+
+function gbCancelRec(){
+  gbStopRec();
+  gbBlob=null;gbChunks=[];
+  document.getElementById('gb-recording').style.display='none';
+  document.getElementById('gb-playback-area').style.display='none';
+  document.getElementById('gb-choose').style.display='block';
+  const v=document.getElementById('gb-vid-prev');v.srcObject=null;v.src='';
+  const p=document.getElementById('gb-vid-playback');p.src='';
+}
+
+function gbReplay(){
+  const v=document.getElementById('gb-vid-playback');
+  v.currentTime=0;v.play();
+}
+
+async function gbSend(){
+  if(!gbBlob||gbBlob.size===0){return;}
+  const note=document.getElementById('gb-pb-note').value.trim();
+  const btn=document.getElementById('btn-gb-send');
+  btn.disabled=true;btn.innerHTML='<div class="spinner dark"></div>';
+
+  const mime=gbBlob.type||'';
+  let ext='webm';
+  if(mime.includes('mp4'))ext='mp4';
+  else if(mime.includes('ogg'))ext='ogg';
+  const safeName=visitorName.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_').toLowerCase();
+  const fileName=`${Date.now()}_${safeName}.${ext}`;
+
+  const {error:upErr}=await sb.storage.from('gastenboek').upload(fileName,gbBlob,{contentType:mime||'application/octet-stream',upsert:false});
+  if(upErr){
+    document.getElementById('msg-gb-send').innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Fout bij uploaden: ${upErr.message}</div>`;
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Versturen';
+    return;
+  }
+
+  const {data:urlData}=sb.storage.from('gastenboek').getPublicUrl(fileName);
+  const row={id:Date.now().toString()+Math.random().toString(36).slice(2),visitor_name:visitorName,type:'video',file_url:urlData.publicUrl,duration_sec:gbSeconds,note};
+  const {error:dbErr}=await sb.from('gastenboek').insert(row);
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Versturen';
+  if(dbErr){
+    document.getElementById('msg-gb-send').innerHTML=`<div class="msg error"><i class="ti ti-alert-circle"></i> Fout: ${dbErr.message}</div>`;
+    return;
+  }
+
+  gbItems.unshift(row);
+  // Move to step 3
+  document.getElementById('step-record').style.display='none';
+  document.getElementById('step-view').style.display='block';
+  renderGbMessages();
+}
+
+function renderGbMessages(){
+  const el=document.getElementById('gb-messages');
+  if(!gbItems.length){el.innerHTML='<div class="empty"><i class="ti ti-message-off"></i>Nog geen berichten.</div>';return;}
+  el.innerHTML=gbItems.map(g=>{
+    const date=g.created_at?new Date(g.created_at).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    const dur=g.duration_sec?`${Math.floor(g.duration_sec/60)}:${String(g.duration_sec%60).padStart(2,'0')}`:'';
+    return `<div class="gb-entry">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="gb-avatar">${g.visitor_name.charAt(0).toUpperCase()}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">${esc(g.visitor_name)}</div>
+          <div style="font-size:11px;color:var(--text-tertiary)">${date}${dur?' · '+dur:''}</div>
+        </div>
+        <span class="gb-type-badge"><i class="ti ti-video" style="font-size:10px"></i> Video</span>
+      </div>
+      ${g.note?`<div style="font-size:13px;font-style:italic;color:var(--text-secondary);margin-bottom:8px">"${esc(g.note)}"</div>`:''}
+      <video src="${esc(g.file_url)}" controls playsinline style="width:100%;max-height:200px;border-radius:10px;background:#000"></video>
+    </div>`;
+  }).join('');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.activeElement?.id==='link-pin-input')checkLinkPin();
+  if(e.key==='Enter'&&document.activeElement?.id==='gb-visitor-name')goToRecord();
+});
+
+boot();
+</script>
+</body>
+</html>
