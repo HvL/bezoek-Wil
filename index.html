@@ -202,14 +202,14 @@ input:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(
   <div id="main-app" style="display:none">
     <div class="tabs">
       <button class="tab active" onclick="switchTab('bezoek')"><i class="ti ti-calendar-plus"></i> Bezoek plannen</button>
-      <button class="tab" onclick="switchTab('agenda')"><i class="ti ti-calendar-event"></i> Agenda</button>
-      <button class="tab" onclick="switchTab('vandaag')"><i class="ti ti-sun"></i> Vandaag</button>
+      <button class="tab" onclick="switchTab('agenda')"><i class="ti ti-calendar-event"></i> Week</button>
+      <button class="tab" onclick="switchTab('vandaag')"><i class="ti ti-sun"></i> Dag</button>
       <button class="tab" onclick="switchTab('gastenboek')"><i class="ti ti-message-heart"></i> Gastenboek</button>
       <button class="tab" onclick="switchTab('secretaresse')"><i class="ti ti-briefcase"></i> Secretaresse</button>
       <button class="tab" onclick="switchTab('beheer')"><i class="ti ti-settings-2"></i> Beheer</button>
     </div>
 
-    <!-- VANDAAG -->
+    <!-- DAG -->
     <div id="tab-vandaag" class="section">
       <div class="card">
         <div class="week-nav">
@@ -268,7 +268,7 @@ input:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(
       </div>
     </div>
 
-    <!-- AGENDA -->
+    <!-- WEEK -->
     <div id="tab-agenda" class="section">
       <div class="stats-row" id="stats-row"></div>
       <div class="card">
@@ -689,7 +689,19 @@ function showMainApp(){
   document.getElementById('visitor-display').innerHTML=
     `<i class="ti ti-user-circle" style="font-size:16px"></i> ${esc(currentVisitor)}
      <button class="btn sm" style="border-color:rgba(255,255,255,0.4);color:#fff;background:rgba(255,255,255,0.15)" onclick="switchVisitor()">Wisselen</button>`;
-  renderAdminChips();renderBookingTimeline();
+  renderAdminChips();
+  // Wil lands on Dag tab, everyone else on Bezoek plannen
+  const isWil = currentVisitor.toLowerCase().replace(/\s/g,'') === 'wil' ||
+                currentVisitor.toLowerCase() === 'wil van der burg' ||
+                currentVisitor.toLowerCase() === 'wilvdburg';
+  if(isWil){
+    document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['bezoek','agenda','vandaag','gastenboek','secretaresse','beheer'][i]==='vandaag'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('tab-vandaag').classList.add('active');
+    renderDayView();
+  } else {
+    renderBookingTimeline();
+  }
 }
 function switchVisitor(){
   document.getElementById('visitor-setup').style.display='block';
@@ -726,10 +738,18 @@ function switchTab(tab){
     }
   }
   if(tab==='secretaresse'){
-    document.getElementById('sec-gate').style.display='block';
-    document.getElementById('sec-content').style.display='none';
-    document.getElementById('sec-pin-input').value='';
-    document.getElementById('sec-pin-error').style.display='none';
+    if(isSec){
+      document.getElementById('sec-gate').style.display='none';
+      document.getElementById('sec-content').style.display='block';
+      renderSecBookingSlots();
+      renderSecDeleteList();
+      renderGbLink();
+    } else {
+      document.getElementById('sec-gate').style.display='block';
+      document.getElementById('sec-content').style.display='none';
+      document.getElementById('sec-pin-input').value='';
+      document.getElementById('sec-pin-error').style.display='none';
+    }
   }
   if(tab==='beheer'){renderAdminBookings();renderWeeklyActivities();renderWindowList();}
 }
